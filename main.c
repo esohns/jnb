@@ -94,7 +94,7 @@ unsigned int ban_map[17][22] = {
 	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
 
-#define GET_BAN_MAP_XY(x,y) ban_map[(y) >> 4][(x) >> 4]
+#define GET_BAN_MAP_XY(x, y) ban_map[(y) >> 4][(x) >> 4]
 
 struct {
 	int num_frames;
@@ -242,7 +242,6 @@ struct {
 
 int pogostick, bunnies_in_space, jetpack, lord_of_the_flies, blood_is_thicker_than_water;
 
-
 #ifndef _MSC_VER
 int
 filelength(int handle)
@@ -266,10 +265,10 @@ flip_pixels(unsigned char* pixels)
 
 	assert(pixels);
 	for (y = 0; y < JNB_HEIGHT; y++) {
-		for (x = 0; x < (352/2); x++) {
-			temp = pixels[y*JNB_WIDTH+x];
-			pixels[y*JNB_WIDTH+x] = pixels[y*JNB_WIDTH+(352-x)-1];
-			pixels[y*JNB_WIDTH+(352-x)-1] = temp;
+		for (x = 0; x < (352 / 2); x++) {
+			temp = pixels[y * JNB_WIDTH + x];
+			pixels[y * JNB_WIDTH + x] = pixels[y * JNB_WIDTH + (352 - x) - 1];
+			pixels[y * JNB_WIDTH + (352 - x) - 1] = temp;
 		}
 	}
 }
@@ -424,11 +423,11 @@ check_cheats()
 
 		blood_is_thicker_than_water ^= 1;
 		if (blood_is_thicker_than_water == 1) {
-			for (i=0; i<32; i++)
-				pal[432+i] = blood[i];
+			for (i = 0; i < 32; i++)
+				pal[432 + i] = blood[i];
 		} else {
-			for (i=0; i<32; i++)
-				pal[432+i] = water[i];
+			for (i = 0; i < 32; i++)
+				pal[432 + i] = water[i];
 		}
 		register_background(background_pic, pal);
 		recalculate_gob(&object_gobs, pal);
@@ -678,13 +677,12 @@ game_loop()
 #ifdef USE_NET
 		if (is_net) {
 			if ( (player[client_player_num].dead_flag == 0) &&
-				(
+			(
 				 (player[client_player_num].action_left) ||
 				 (player[client_player_num].action_right) ||
 				 (player[client_player_num].action_up) ||
 				 (player[client_player_num].jump_ready == 0)
-				)
-			   ) {
+			) ) {
 				tellServerNewPosition();
 			}
 		}
@@ -706,15 +704,15 @@ game_loop()
 int
 menu_loop()
 {
-	unsigned char *handle;
+	unsigned char* handle;
 	int mod_vol;
 	int c1, c2;
 	int s1, s2;
 
-	for(c1 = 0; c1 < JNB_MAX_PLAYERS; c1++)		// reset player values
-        {
+	for (c1 = 0; c1 < JNB_MAX_PLAYERS; c1++)		// reset player values
+  {
 		ai[c1] = 0;
-        }
+  }
 
 	while (1) {
 
@@ -794,7 +792,7 @@ menu_loop()
 
 		deinit_level();
 
-		memset(mask_pic, 0, JNB_WIDTH*JNB_HEIGHT);
+		memset(mask_pic, 0, JNB_WIDTH * JNB_HEIGHT);
 		register_mask(mask_pic);
 
 		register_background(NULL, NULL);
@@ -834,7 +832,7 @@ menu_loop()
 			strcpy(main_info.error_str, "Error loading 'menu.pcx', aborting...\n");
 			return 1;
 		}
-		if (read_pcx(handle, background_pic, JNB_WIDTH*JNB_HEIGHT, pal) != 0) {
+		if (read_pcx(handle, background_pic, JNB_WIDTH * JNB_HEIGHT, pal) != 0) {
 			strcpy(main_info.error_str, "Error loading 'menu.pcx', aborting...\n");
 			return 1;
 		}
@@ -961,35 +959,36 @@ player_action_left(int c1)
     }
 }
 
-
 void
 player_action_right(int c1)
 {
 	int s1 = 0, s2 = 0;
 	int below_left, below, below_right;
 
-    s1 = (player[c1].x >> 16);
-    s2 = (player[c1].y >> 16);
+  s1 = (player[c1].x >> 16);
+  s2 = (player[c1].y >> 16);
 	below_left = GET_BAN_MAP_XY(s1, s2 + 16);
 	below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
 	below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
 
-    if (below == BAN_ICE) {
-        if (player[c1].x_add < 0)
-            player[c1].x_add += 1024;
-        else
-            player[c1].x_add += 768;
-    } else if ((below_left != BAN_SOLID && below_right == BAN_ICE) || (below_left == BAN_ICE && below_right != BAN_SOLID)) {
-        if (player[c1].x_add > 0)
-            player[c1].x_add += 1024;
-        else
-            player[c1].x_add += 768;
-    } else {
-        if (player[c1].x_add < 0) {
-            player[c1].x_add += 16384;
-            if (player[c1].x_add < 98304L && player[c1].in_water == 0 && below == BAN_SOLID)
-                add_object(OBJ_SMOKE, (player[c1].x >> 16) + 2 + rnd(9), (player[c1].y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
-        } else
+  if (below == BAN_ICE) {
+    if (player[c1].x_add < 0) player[c1].x_add += 1024;
+    else
+        player[c1].x_add += 768;
+  } else {
+    if ((below_left != BAN_SOLID && below_right == BAN_ICE) ||
+        (below_left == BAN_ICE   && below_right != BAN_SOLID))
+    {
+     if (player[c1].x_add > 0) player[c1].x_add += 1024;
+     else player[c1].x_add += 768;
+    }
+    else
+    {
+      if (player[c1].x_add < 0) {
+          player[c1].x_add += 16384;
+          if (player[c1].x_add < 98304L && player[c1].in_water == 0 && below == BAN_SOLID)
+            add_object(OBJ_SMOKE, (player[c1].x >> 16) + 2 + rnd(9), (player[c1].y >> 16) + 13 + rnd(5), 0, -16384 - rnd(8192), OBJ_ANIM_SMOKE, 0);
+          } else
             player[c1].x_add += 12288;
     }
     if (player[c1].x_add > 98304L)
@@ -1001,17 +1000,20 @@ player_action_right(int c1)
         player[c1].frame_tick = 0;
         player[c1].image = player_anims[player[c1].anim].frame[player[c1].frame].image + player[c1].direction * 9;
     }
+  }
 }
 
 int
-map_tile(int pos_x, int pos_y)
+map_tile(int pos_x_in, int pos_y_in)
 {
-  int tile;
+  int pos_x, pos_y, tile;
+  pos_x = pos_x_in;
+  pos_y = pos_y_in;
 
   pos_x = pos_x >> 4;
   pos_y = pos_y >> 4;
 
-  if(pos_x < 0 || pos_x >= 17 || pos_y < 0 || pos_y >= 22) return BAN_VOID;
+  if (pos_x < 0 || pos_x >= 17 || pos_y < 0 || pos_y >= 22) return BAN_VOID;
 
   tile = ban_map[pos_y][pos_x];
 
@@ -1078,7 +1080,7 @@ cpu_move()
 				lm = !lm;
 				rm = !rm;
 			}
-			else if (tar_posx - cur_posx < 4+8 && tar_posx - cur_posx > -4)
+			else if (tar_posx - cur_posx < 4 + 8 && tar_posx - cur_posx > -4)
 			{      // makes the bunnies less "nervous"
 				lm = 0;
 				lm = 0;
@@ -1086,32 +1088,32 @@ cpu_move()
 
 			/* Y-axis movement */
 			if (map_tile(cur_posx, cur_posy + 16) != BAN_VOID &&
-				  ((i == 0 && key_pressed(KEY_PL1_JUMP)) ||
-				  (i == 1 && key_pressed(KEY_PL2_JUMP))  ||
-				  (i == 2 && key_pressed(KEY_PL3_JUMP))  ||
-				  (i == 3 && key_pressed(KEY_PL4_JUMP))))
+          ((i == 0 && key_pressed(KEY_PL1_JUMP)) ||
+				   (i == 1 && key_pressed(KEY_PL2_JUMP)) ||
+				   (i == 2 && key_pressed(KEY_PL3_JUMP)) ||
+				   (i == 3 && key_pressed(KEY_PL4_JUMP))))
 				jm = 0; // if we are on ground and jump key is being pressed,
 								// first we have to release it or else we won't be able to jump more than once
 
-			else if (map_tile(cur_posx, cur_posy-8) != BAN_VOID &&
-				       map_tile(cur_posx, cur_posy-8) != BAN_WATER)
+			else if (map_tile(cur_posx, cur_posy - 8) != BAN_VOID &&
+				       map_tile(cur_posx, cur_posy - 8) != BAN_WATER)
 				jm = 0; // don't jump if there is something over it
 
-			else if(map_tile(cur_posx-(lm*8)+(rm*16), cur_posy) != BAN_VOID &&
-				map_tile(cur_posx-(lm*8)+(rm*16), cur_posy) != BAN_WATER &&
-				cur_posx > 16 && cur_posx < 352-16-8)  // obstacle, jump
-					jm = 1; // if there is something on the way, jump over it
+			else if (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_VOID &&
+				       map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy) != BAN_WATER &&
+				                cur_posx > 16 && cur_posx < 352 - 16 - 8)  // obstacle, jump
+				jm = 1; // if there is something on the way, jump over it
 
 			else if (((i == 0 && key_pressed(KEY_PL1_JUMP)) ||
 							  (i == 1 && key_pressed(KEY_PL2_JUMP)) ||
 							  (i == 2 && key_pressed(KEY_PL3_JUMP)) ||
 							  (i == 3 && key_pressed(KEY_PL4_JUMP))) &&
-							 (map_tile(cur_posx-(lm*8)+(rm*16), cur_posy+8) != BAN_VOID &&
-							  map_tile(cur_posx-(lm*8)+(rm*16), cur_posy+8) != BAN_WATER))
-					jm = 1; // this makes it possible to jump over 2 tiles
+							  (map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_VOID &&
+							   map_tile(cur_posx - (lm * 8) + (rm * 16), cur_posy + 8) != BAN_WATER))
+				jm = 1; // this makes it possible to jump over 2 tiles
 
 			else if (cur_posy - tar_posy < 32 && cur_posy - tar_posy > 0 &&
-               tar_posx - cur_posx < 32+8 && tar_posx - cur_posx > -32)  // don't jump - running away
+               tar_posx - cur_posx < 32 + 8 && tar_posx - cur_posx > -32)  // don't jump - running away
 				jm = 0;
 
 			else if (tar_posy <= cur_posy)   // target on the upper side
@@ -1490,7 +1492,6 @@ steer_players()
 					player[c1].frame_tick = 0;
 					player[c1].image = player_anims[player[c1].anim].frame[player[c1].frame].image + player[c1].direction * 9;
 				}
-
 			}
 
 			player[c1].frame_tick++;
@@ -1505,11 +1506,8 @@ steer_players()
 				player[c1].frame_tick = 0;
 			}
 			player[c1].image = player_anims[player[c1].anim].frame[player[c1].frame].image + player[c1].direction * 9;
-
 		}
-
 	}
-
 }
 
 void
@@ -1532,8 +1530,8 @@ position_player(int player_num)
 			}
 		}
 		if (c1 == JNB_MAX_PLAYERS) {
-			player[player_num].x = (long) s1 << 20;
-			player[player_num].y = (long) s2 << 20;
+			player[player_num].x = (long)s1 << 20;
+			player[player_num].y = (long)s2 << 20;
 			player[player_num].x_add = player[player_num].y_add = 0;
 			player[player_num].direction = 0;
 			player[player_num].jump_ready = 1;
@@ -1565,8 +1563,8 @@ add_object(int type, int x, int y, int x_add, int y_add, int anim, int frame)
 		if (objects[c1].used == 0) {
 			objects[c1].used = 1;
 			objects[c1].type = type;
-			objects[c1].x = (long) x << 16;
-			objects[c1].y = (long) y << 16;
+			objects[c1].x = (long)x << 16;
+			objects[c1].y = (long)y << 16;
 			objects[c1].x_add = x_add;
 			objects[c1].y_add = y_add;
 			objects[c1].x_acc = 0;

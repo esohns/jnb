@@ -62,40 +62,35 @@ load_xpm_from_array(char **xpm)
 	while ((*p != ' ') && (*p != '\t')) p++; \
 	while ((*p == ' ') || (*p == '\t')) p++; }
 
-	SDL_Surface *surface;
-	char *p;
+	SDL_Surface* surface;
+	char* p;
 	int width;
 	int height;
 	int colors;
 	int images;
 	int color;
 	int pal[256];
-	int x,y;
+	int x, y;
 
 	p = *xpm++;
 
 	width = atoi(p);
-	if (width <= 0)
-		return NULL;
+	if (width <= 0)	return NULL;
 	NEXT_TOKEN;
 
 	height = atoi(p);
-	if (height <= 0)
-		return NULL;
+	if (height <= 0) return NULL;
 	NEXT_TOKEN;
 
 	colors = atoi(p);
-	if (colors <= 0)
-		return NULL;
+	if (colors <= 0) return NULL;
 	NEXT_TOKEN;
 
 	images = atoi(p);
-	if (images <= 0)
-		return NULL;
+	if (images <= 0) return NULL;
 
 	surface = SDL_CreateRGBSurface(SDL_SWSURFACE, width, height, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-	if (!surface)
-		return NULL;
+	if (!surface)	return NULL;
 
 	SDL_SetColorKey(surface, SDL_SRCCOLORKEY, SDL_MapRGBA(surface->format, 0, 0, 0, 0));
 	while (colors--) {
@@ -122,7 +117,7 @@ load_xpm_from_array(char **xpm)
 
 		p = *xpm++;
 
-		pixels = (int *)&((char *)surface->pixels)[y++ * surface->pitch];
+		pixels = (int*)&((char*)surface->pixels)[y++ * surface->pitch];
 		x = 0;
 		while (x < width) {
 			Uint8 r,g,b,a;
@@ -147,32 +142,31 @@ load_xpm_from_array(char **xpm)
 unsigned char*
 get_vgaptr(int page, int x, int y)
 {
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
-	return (unsigned char *)screen_buffer[page] + (y*screen_pitch)+(x);
+	return (unsigned char*)screen_buffer[page] + (y * screen_pitch) + (x);
 }
-
 
 void
 set_scaling(int scale)
 {
-	if (scale==1) {
-		screen_width=800;
-		screen_height=512;
-		scale_up=1;
-		dirty_block_shift=5;
-		screen_pitch=screen_width;
+	if (scale == 1) {
+		screen_width = 800;
+		screen_height = 512;
+		scale_up = 1;
+		dirty_block_shift = 5;
+		screen_pitch = screen_width;
 	} else {
-		screen_width=400;
-		screen_height=256;
-		scale_up=0;
-		dirty_block_shift=4;
-		screen_pitch=screen_width;
+		screen_width = 400;
+		screen_height = 256;
+		scale_up = 0;
+		dirty_block_shift = 4;
+		screen_pitch = screen_width;
 	}
 }
 
 void
-open_screen(void)
+open_screen()
 {
 	int lval = 0;
 	int flags;
@@ -193,35 +187,34 @@ open_screen(void)
 		exit(EXIT_FAILURE);
 	}
 
-	if(fullscreen)
+	if (fullscreen)
 		SDL_ShowCursor(0);
 	else
 		SDL_ShowCursor(1);
 
 	SDL_WM_SetCaption("Jump'n'Bump","");
 
-	icon=load_xpm_from_array(jumpnbump_xpm);
-	if (icon==NULL) {
+	icon = load_xpm_from_array(jumpnbump_xpm);
+	if (icon == NULL) {
 	    printf("Couldn't load icon\n");
 	} else {
-	    SDL_WM_SetIcon(icon,NULL);
+	    SDL_WM_SetIcon(icon, NULL);
 	}
 
 	vinited = 1;
 
 	memset(dirty_blocks, 0, sizeof(dirty_blocks));
 
-	screen_buffer[0]=malloc(screen_width*screen_height);
-	screen_buffer[1]=malloc(screen_width*screen_height);
+	screen_buffer[0] = malloc(screen_width * screen_height);
+	screen_buffer[1] = malloc(screen_width * screen_height);
 
 /*
-	dirty_blocks[0]=malloc(sizeof(int)*25*16+1000);
-	dirty_blocks[1]=malloc(sizeof(int)*25*16+1000);
+	dirty_blocks[0] = malloc(sizeof(int)*25*16+1000);
+	dirty_blocks[1] = malloc(sizeof(int)*25*16+1000);
 */
 
 	return;
 }
-
 
 void
 fs_toggle()
@@ -234,153 +227,149 @@ fs_toggle()
 		fullscreen ^= 1;
 }
 
-
 void
 wait_vrt(int mix)
 {
 	return;
 }
 
-
 void
 clear_page(int page, int color)
 {
 	int i,j;
-	unsigned char *buf = get_vgaptr(page, 0, 0);
+	unsigned char* buf = get_vgaptr(page, 0, 0);
 
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
-	for (i=0; i<(25*16); i++)
+	for (i = 0; i < (25*16); i++)
 		dirty_blocks[page][i] = 1;
 
-	for (i=0; i<screen_height; i++)
-		for (j=0; j<screen_width; j++)
+	for (i = 0; i < screen_height; i++)
+		for (j = 0; j < screen_width; j++)
 			*buf++ = color;
 }
-
 
 void
 clear_lines(int page, int y, int count, int color)
 {
-	int i,j;
+	int i, j;
 
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	if (scale_up) {
 		count *= 2;
 		y *= 2;
 	}
 
-	for (i=0; i<count; i++) {
-		if ((i+y)<screen_height) {
-			unsigned char *buf = get_vgaptr(page, 0, i+y);
-			for (j=0; j<screen_width; j++)
+	for (i = 0; i < count; i++) {
+		if ((i + y) < screen_height) {
+			unsigned char* buf = get_vgaptr(page, 0, i + y);
+			for (j = 0; j < screen_width; j++)
 				*buf++ = color;
 		}
 	}
-	count = ((y+count)>>dirty_block_shift) - (y>>dirty_block_shift) + 1;
+	count = ((y + count) >> dirty_block_shift) - (y >> dirty_block_shift) + 1;
 	y >>= dirty_block_shift;
-	for (i=0; i<count; i++)
-		for (j=0; j<25; j++)
-			dirty_blocks[page][(y+i)*25+j] = 1;
+	for (i = 0; i < count; i++)
+		for (j = 0; j < 25; j++)
+			dirty_blocks[page][(y + i) * 25 + j] = 1;
 }
-
 
 int
 get_color(int color, char pal[768])
 {
-	assert(color<256);
+	assert(color < 256);
 	assert(pal);
-	return SDL_MapRGB(jnb_surface->format, (Uint8)(pal[color*3+0]<<2), (Uint8)(pal[color*3+1]<<2), (Uint8)(pal[color*3+2]<<2));
+	return SDL_MapRGB(jnb_surface->format,
+                    (Uint8)(pal[color * 3 + 0] << 2),
+                    (Uint8)(pal[color * 3 + 1] << 2),
+                    (Uint8)(pal[color * 3 + 2] << 2));
 }
 
 
 int
 get_pixel(int page, int x, int y)
 {
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	if (scale_up) {
 		x *= 2;
 		y *= 2;
 	}
 
-	assert(x<screen_width);
-	assert(y<screen_height);
+	assert(x < screen_width);
+	assert(y < screen_height);
 
-	return *(unsigned char *)get_vgaptr(page, x, y);
+	return *(unsigned char*)get_vgaptr(page, x, y);
 }
-
 
 void
 set_pixel(int page, int x, int y, int color)
 {
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	if (scale_up) {
 		x *= 2;
 		y *= 2;
 	}
 
-	assert(x<screen_width);
-	assert(y<screen_height);
+	assert(x < screen_width);
+	assert(y < screen_height);
 
-	dirty_blocks[page][(y>>dirty_block_shift)*25+(x>>dirty_block_shift)] = 1;
+	dirty_blocks[page][(y >> dirty_block_shift) * 25 + (x >> dirty_block_shift)] = 1;
 
-	*(unsigned char *)get_vgaptr(page, x, y) = color;
+	*(unsigned char*)get_vgaptr(page, x, y) = color;
 }
-
 
 void
 flippage(int page)
 {
 	int x,y;
-	unsigned char *src;
-	unsigned char *dest;
+	unsigned char* src;
+	unsigned char* dest;
 
-	assert(drawing_enable==0);
+	assert(drawing_enable == 0);
 
 	SDL_LockSurface(jnb_surface);
 	if (!jnb_surface->pixels) {
 		
-		for (x=0; x<(25*16); x++) {
+		for (x = 0; x < (25 * 16); x++) {
 			dirty_blocks[0][x] = 1;
 			dirty_blocks[1][x] = 1;
 		}
 
 		return;
 	}
-	dest=(unsigned char *)jnb_surface->pixels;
-	src=screen_buffer[page];
-	for (y=0; y<screen_height; y++) {
-		for (x=0; x<25; x++) {
+	dest = (unsigned char*)jnb_surface->pixels;
+	src = screen_buffer[page];
+	for (y = 0; y < screen_height; y++) {
+		for (x = 0; x < 25; x++) {
 			int count;
 			int test_x;
 
-			count=0;
-			test_x=x;
-			while ( (test_x<25) && (dirty_blocks[page][(y>>dirty_block_shift)*25+test_x]) ) {
+			count = 0;
+			test_x = x;
+			while ( (test_x < 25) && (dirty_blocks[page][(y >> dirty_block_shift) * 25 + test_x]) ) {
 				count++;
 				test_x++;
 			}
 			if (count) {
-				memcpy(	&dest[y*jnb_surface->pitch+(x<<dirty_block_shift)],
-					&src[y*screen_pitch+((x<<dirty_block_shift))],
-					((16<<dirty_block_shift)>>4)*count);
+				memcpy(&dest[y * jnb_surface->pitch + (x << dirty_block_shift)],
+               &src[y * screen_pitch + ((x << dirty_block_shift))],
+					     ((16 << dirty_block_shift) >> 4) * count);
 			}
 			x = test_x;
 		}
 	}
 	memset(&dirty_blocks[page], 0, sizeof(int)*25*16);
-        SDL_UnlockSurface(jnb_surface);
+  SDL_UnlockSurface(jnb_surface);
 	SDL_Flip(jnb_surface);
 }
 
-
 void
-draw_begin(void)
+draw_begin()
 {
-	assert(drawing_enable==0);
+	assert(drawing_enable == 0);
 
 	drawing_enable = 1;
 	if (background_drawn == 0) {
@@ -395,23 +384,22 @@ draw_begin(void)
 	}
 }
 
-
 void
-draw_end(void)
+draw_end()
 {
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	drawing_enable = 0;
 }
 
 
 void
-setpalette(int index, int count, char *palette)
+setpalette(int index, int count, char* palette)
 {
 	SDL_Color colors[256];
 	int i;
 
-	assert(drawing_enable==0);
+	assert(drawing_enable == 0);
 
 	for (i = 0; i < count; i++) {
 		colors[i+index].r = palette[i * 3 + 0] << 2;
@@ -421,14 +409,13 @@ setpalette(int index, int count, char *palette)
 	SDL_SetColors(jnb_surface, &colors[index], index, count);
 }
 
-
 void
 fillpalette(int red, int green, int blue)
 {
 	SDL_Color colors[256];
 	int i;
 
-	assert(drawing_enable==0);
+	assert(drawing_enable == 0);
 
 	for (i = 0; i < 256; i++) {
 		colors[i].r = red << 2;
@@ -438,14 +425,13 @@ fillpalette(int red, int green, int blue)
 	SDL_SetColors(jnb_surface, colors, 0, 256);
 }
 
-
 void
-get_block(int page, int x, int y, int width, int height, void *buffer)
+get_block(int page, int x, int y, int width, int height, void* buffer)
 {
-	unsigned char *buffer_ptr, *vga_ptr;
+	unsigned char* buffer_ptr, *vga_ptr;
 	int h;
 
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	if (scale_up) {
 		x *= 2;
@@ -462,9 +448,9 @@ get_block(int page, int x, int y, int width, int height, void *buffer)
 		height = screen_height - y;
 	if (x + width >= screen_width)
 		width = screen_width - x;
-	if (width<=0)
+	if (width <= 0)
 		return;
-	if(height<=0)
+	if(height <= 0)
 		return;
 
 	vga_ptr = get_vgaptr(page, x, y);
@@ -474,16 +460,15 @@ get_block(int page, int x, int y, int width, int height, void *buffer)
 		vga_ptr += screen_pitch;
 		buffer_ptr += width;
 	}
-
 }
 
 void
-put_block(int page, int x, int y, int width, int height, void *buffer)
+put_block(int page, int x, int y, int width, int height, void* buffer)
 {
 	int h;
-	unsigned char *vga_ptr, *buffer_ptr;
+	unsigned char* vga_ptr, *buffer_ptr;
 
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	if (scale_up) {
 		x *= 2;
@@ -500,9 +485,9 @@ put_block(int page, int x, int y, int width, int height, void *buffer)
 		height = screen_height - y;
 	if (x + width >= screen_width)
 		width = screen_width - x;
-	if (width<=0)
+	if (width <= 0)
 		return;
-	if(height<=0)
+	if(height <= 0)
 		return;
 
 	vga_ptr = get_vgaptr(page, x, y);
@@ -512,17 +497,17 @@ put_block(int page, int x, int y, int width, int height, void *buffer)
 		vga_ptr += screen_pitch;
 		buffer_ptr += width;
 	}
-	width = ((x+width)>>dirty_block_shift) - (x>>dirty_block_shift) + 1;
-	height = ((y+height)>>dirty_block_shift) - (y>>dirty_block_shift) + 1;
+	width = ((x + width) >> dirty_block_shift) - (x >> dirty_block_shift) + 1;
+	height = ((y + height) >> dirty_block_shift) - (y >> dirty_block_shift) + 1;
 	x >>= dirty_block_shift;
 	y >>= dirty_block_shift;
 	while (width--)
-		for (h=0; h<height; h++)
-			dirty_blocks[page][(y+h)*25+(x+width)] = 1;
+		for (h = 0; h < height; h++)
+			dirty_blocks[page][(y + h) * 25 + (x + width)] = 1;
 }
 
 void
-put_text(int page, int x, int y, char *text, int align)
+put_text(int page, int x, int y, char* text, int align)
 {
 	int c1;
 	int t1;
@@ -530,7 +515,7 @@ put_text(int page, int x, int y, char *text, int align)
 	int cur_x;
 	int image;
 
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 
 	if (text == NULL || strlen(text) == 0)
 		return;
@@ -653,9 +638,8 @@ put_text(int page, int x, int y, char *text, int align)
 	}
 }
 
-
 void
-put_pob(int page, int x, int y, int image, struct gob_t *gob, int use_mask, void *mask_pic)
+put_pob(int page, int x, int y, int image, struct gob_t* gob, int use_mask, void* mask_pic)
 {
 	int c1, c2;
 	int pob_x, pob_y;
@@ -666,18 +650,18 @@ put_pob(int page, int x, int y, int image, struct gob_t *gob, int use_mask, void
 	unsigned char *pob_ptr;
 	unsigned char *mask_ptr;
 
-	assert(drawing_enable==1);
+	assert(drawing_enable == 1);
 	assert(gob);
-	assert(image>=0);
-	assert(image<gob->num_images);
+	assert(image >= 0);
+	assert(image < gob->num_images);
 
 	if (scale_up) {
 		x *= 2;
 		y *= 2;
-		width = draw_width = gob->width[image]*2;
-		height = draw_height = gob->height[image]*2;
-		x -= gob->hs_x[image]*2;
-		y -= gob->hs_y[image]*2;
+		width = draw_width = gob->width[image] * 2;
+		height = draw_height = gob->height[image] * 2;
+		x -= gob->hs_x[image] * 2;
+		y -= gob->hs_y[image] * 2;
 	} else {
 		width = draw_width = gob->width[image];
 		height = draw_height = gob->height[image];
@@ -708,8 +692,8 @@ put_pob(int page, int x, int y, int image, struct gob_t *gob, int use_mask, void
 		draw_height -= y + height - screen_height;
 
 	vga_ptr = get_vgaptr(page, x, y);
-	pob_ptr = ((unsigned char *)gob->data[image]) + ((pob_y * width) + pob_x);
-	mask_ptr = ((unsigned char *)mask) + ((y * screen_pitch) + (x));
+	pob_ptr = ((unsigned char*)gob->data[image]) + ((pob_y * width) + pob_x);
+	mask_ptr = ((unsigned char*)mask) + ((y * screen_pitch) + (x));
 	for (c1 = 0; c1 < draw_height; c1++) {
 		for (c2 = 0; c2 < draw_width; c2++) {
 			colour = *mask_ptr;
@@ -727,30 +711,30 @@ put_pob(int page, int x, int y, int image, struct gob_t *gob, int use_mask, void
 		vga_ptr += (screen_width - c2);
 		mask_ptr += (screen_width - c2);
 	}
-	draw_width = ((x+draw_width)>>dirty_block_shift) - (x>>dirty_block_shift) + 1;
-	draw_height = ((y+draw_height)>>dirty_block_shift) - (y>>dirty_block_shift) + 1;
+	draw_width = ((x + draw_width) >> dirty_block_shift) - (x >> dirty_block_shift) + 1;
+	draw_height = ((y + draw_height) >> dirty_block_shift) - (y >> dirty_block_shift) + 1;
 	x >>= dirty_block_shift;
 	y >>= dirty_block_shift;
 	while (draw_width--)
-		for (c1=0; c1<draw_height; c1++)
-			dirty_blocks[page][(y+c1)*25+(x+draw_width)] = 1;
+		for (c1 = 0; c1 < draw_height; c1++)
+			dirty_blocks[page][(y + c1) * 25 + (x + draw_width)] = 1;
 }
 
 int
 pob_width(int image, struct gob_t* gob)
 {
 	assert(gob);
-	assert(image>=0);
-	assert(image<gob->num_images);
-	return gob->width[image];
+	assert(image >= 0);
+	assert(image < gob->num_images);
+  return gob->width[image];
 }
 
 int
 pob_height(int image, struct gob_t* gob)
 {
 	assert(gob);
-	assert(image>=0);
-	assert(image<gob->num_images);
+	assert(image >= 0);
+	assert(image < gob->num_images);
 	return gob->height[image];
 }
 
@@ -758,8 +742,8 @@ int
 pob_hs_x(int image, struct gob_t* gob)
 {
 	assert(gob);
-	assert(image>=0);
-	assert(image<gob->num_images);
+	assert(image >= 0);
+	assert(image < gob->num_images);
 	return gob->hs_x[image];
 }
 
@@ -767,11 +751,10 @@ int
 pob_hs_y(int image, struct gob_t* gob)
 {
 	assert(gob);
-	assert(image>=0);
-	assert(image<gob->num_images);
+	assert(image >= 0);
+	assert(image < gob->num_images);
 	return gob->hs_y[image];
 }
-
 
 int
 read_pcx(unsigned char* handle, void* buf, int buf_len, char* pal)
@@ -815,13 +798,13 @@ register_background(char* pixels, char pal[768])
 		return;
 	assert(pal);
 	if (scale_up) {
-		background = malloc(screen_pitch*screen_height);
+		background = malloc(screen_pitch * screen_height);
 		assert(background);
-		do_scale2x((unsigned char *)pixels, JNB_WIDTH, JNB_HEIGHT, (unsigned char *)background);
+		do_scale2x((unsigned char*)pixels, JNB_WIDTH, JNB_HEIGHT, (unsigned char*)background);
 	} else {
-		background = malloc(JNB_WIDTH*JNB_HEIGHT);
+		background = malloc(JNB_WIDTH * JNB_HEIGHT);
 		assert(background);
-		memcpy(background, pixels, JNB_WIDTH*JNB_HEIGHT);
+		memcpy(background, pixels, JNB_WIDTH * JNB_HEIGHT);
 	}
 }
 
@@ -836,17 +819,17 @@ register_gob(unsigned char* handle, struct gob_t* gob, int len)
 
 	gob->num_images = (short)((gob_data[0]) + (gob_data[1] << 8));
 
-	gob->width = malloc(gob->num_images*sizeof(int));
-	gob->height = malloc(gob->num_images*sizeof(int));
-	gob->hs_x = malloc(gob->num_images*sizeof(int));
-	gob->hs_y = malloc(gob->num_images*sizeof(int));
-	gob->data = malloc(gob->num_images*sizeof(void *));
-	gob->orig_data = malloc(gob->num_images*sizeof(void *));
-	for (i=0; i<gob->num_images; i++) {
+	gob->width = malloc(gob->num_images     * sizeof(int));
+	gob->height = malloc(gob->num_images    * sizeof(int));
+	gob->hs_x = malloc(gob->num_images      * sizeof(int));
+	gob->hs_y = malloc(gob->num_images      * sizeof(int));
+	gob->data = malloc(gob->num_images      * sizeof(void*));
+	gob->orig_data = malloc(gob->num_images * sizeof(void*));
+	for (i = 0; i < gob->num_images; i++) {
 		int image_size;
 		int offset;
 
-		offset = (gob_data[i*4+2]) + (gob_data[i*4+3] << 8) + (gob_data[i*4+4] << 16) + (gob_data[i*4+5] << 24);
+		offset = (gob_data[i * 4 + 2]) + (gob_data[i * 4 + 3] << 8) + (gob_data[i * 4 + 4] << 16) + (gob_data[i * 4 + 5] << 24);
 
 		gob->width[i]  = (short)((gob_data[offset]) + (gob_data[offset+1] << 8)); offset += 2;
 		gob->height[i] = (short)((gob_data[offset]) + (gob_data[offset+1] << 8)); offset += 2;
@@ -859,9 +842,9 @@ register_gob(unsigned char* handle, struct gob_t* gob, int len)
 		if (scale_up) {
 			image_size = gob->width[i] * gob->height[i] * 4;
 			gob->data[i] = malloc(image_size);
-			do_scale2x((unsigned char *)gob->orig_data[i], gob->width[i], gob->height[i], (unsigned char *)gob->data[i]);
+			do_scale2x((unsigned char*)gob->orig_data[i], gob->width[i], gob->height[i], (unsigned char*)gob->data[i]);
 		} else {
-			gob->data[i] = (unsigned short *)gob->orig_data[i];
+			gob->data[i] = (unsigned short*)gob->orig_data[i];
 		}
 	}
 	free(gob_data);
@@ -883,12 +866,12 @@ register_mask(void* pixels)
 	}
 	assert(pixels);
 	if (scale_up) {
-		mask = malloc(screen_pitch*screen_height);
+		mask = malloc(screen_pitch * screen_height);
 		assert(mask);
-		do_scale2x((unsigned char *)pixels, JNB_WIDTH, JNB_HEIGHT, (unsigned char *)mask);
+		do_scale2x((unsigned char*)pixels, JNB_WIDTH, JNB_HEIGHT, (unsigned char*)mask);
 	} else {
-		mask = malloc(JNB_WIDTH*JNB_HEIGHT);
+		mask = malloc(JNB_WIDTH * JNB_HEIGHT);
 		assert(mask);
-		memcpy(mask, pixels, JNB_WIDTH*JNB_HEIGHT);
+		memcpy(mask, pixels, JNB_WIDTH * JNB_HEIGHT);
 	}
 }

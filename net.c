@@ -327,7 +327,7 @@ serverTellEveryoneGoodbye()
 		buggered_off = 1;
 		for (i = 0; i < JNB_MAX_PLAYERS; i++) {
 			if (player[i].enabled) {
-				NetPacket pkt;
+				struct NetPacket pkt;
 
 				pkt.cmd = NETCMD_BYE;
 				pkt.arg = i;
@@ -360,7 +360,7 @@ update_players_from_server()
 				SDLNet_FreeSocketSet(socketset);
 				SDLNet_TCP_Close(sock);
 				sock = NULL;
-				server_said_bye = 1;
+				server_said_byeserver_said_bye = 1;
 				return(0);
 			} else {
 				player[pkt.arg].enabled = 0;
