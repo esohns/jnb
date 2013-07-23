@@ -67,6 +67,8 @@ void init_scale2x(void)
 		//  E3 = H == F && D != H && B != F ? F : E; // -010 => 1010 or 0010 => A or 2
 		lookup_map[3*16+i] = (i == 0xA || i == 0x2) ? 2 : 1;
 	}
+
+	scale2x_inited = 1;
 }
 
 void do_scale2x(unsigned char *src,
@@ -80,75 +82,78 @@ void do_scale2x(unsigned char *src,
 	int dst_height = src_height * 2;
 	int code;
 	byte rowColors[3];
+	
+	byte *b;
+	byte *d;
+	byte *e;
+	byte *f;
+	byte *h;
 	byte *e0;
 	byte *e1;
 	byte *e2;
 	byte *e3;
 
+	// *NOTE*: add sanity check when there is no context at all (see above)
+	if (src_width == 1 || src_height == 1) {
+		dst[0] = src[0];
+		dst[1] = src[0];
+		dst[2] = src[0];
+		dst[3] = src[0];
+
+		return;
+	}
+
 	if (!scale2x_inited)
 		init_scale2x();
 
 	// special top case - b is always unknown
-	{
-		byte *d;
-		byte *e;
-		byte *f;
-		byte *h;
+	e0 = &dst[0];
+	e1 = &dst[1];
+	e2 = &dst[dst_width];
+	e3 = &dst[dst_width + 1];
+	e = &src[0];
+	f = &src[1];
+	h = &src[src_width];
 
-		e0 = &dst[0];
-		e1 = &dst[1];
-		e2 = &dst[dst_width];
-		e3 = &dst[dst_width + 1];
-		e = &src[0];
-		f = &src[1];
-		h = &src[src_width];
+	// special left case - d is unknown
+	rowColors[0] = *e;
+	rowColors[1] = *e;
+	rowColors[2] = *f;
+	code = ( (*f == *h)<<1 );
+	*e0 = rowColors[lookup_map[0*16+code]];
+	*e1 = rowColors[lookup_map[1*16+code]];
+	*e2 = rowColors[lookup_map[2*16+code]];
+	*e3 = rowColors[lookup_map[3*16+code]];
+	e++; f++; h++;
+	d = &src[src_width]; // (src_width - 1) + 1
+	e0+=2; e1+=2; e2+=2; e3+=2;
 
-		// special left case - d is unknown
-		rowColors[0] = *e;
-		rowColors[1] = *e;
-		rowColors[2] = *f;
-		code = ( (*f == *h)<<1 );
-		*e0 = rowColors[lookup_map[0*16+code]];
-		*e1 = rowColors[lookup_map[1*16+code]];
-		*e2 = rowColors[lookup_map[2*16+code]];
-		*e3 = rowColors[lookup_map[3*16+code]];
-		e++; f++; h++;
-		d = &src[src_width]; // (src_width - 1) + 1
-		e0+=2; e1+=2; e2+=2; e3+=2;
-
-		// normal case
-		for (x=1; x<(src_width-1); x++) {
-			rowColors[0] = *d;
-			rowColors[1] = *e;
-			rowColors[2] = *f;
-			code = ( (*f == *h)<<1 | (*h == *d)<<2 );
-			*e0 = rowColors[lookup_map[0*16+code]];
-			*e1 = rowColors[lookup_map[1*16+code]];
-			*e2 = rowColors[lookup_map[2*16+code]];
-			*e3 = rowColors[lookup_map[3*16+code]];
-			d++; e++; f++; h++;
-			e0+=2; e1+=2; e2+=2; e3+=2;
-		}
-
-		// special right case - f is unknown
+	// normal case
+	for (x=1; x<(src_width-1); x++) {
 		rowColors[0] = *d;
 		rowColors[1] = *e;
-		rowColors[2] = *e;
-		code = ( (*h == *d)<<2 );
+		rowColors[2] = *f;
+		code = ( (*f == *h)<<1 | (*h == *d)<<2 );
 		*e0 = rowColors[lookup_map[0*16+code]];
 		*e1 = rowColors[lookup_map[1*16+code]];
 		*e2 = rowColors[lookup_map[2*16+code]];
 		*e3 = rowColors[lookup_map[3*16+code]];
+		d++; e++; f++; h++;
+		e0+=2; e1+=2; e2+=2; e3+=2;
 	}
+
+	// special right case - f is unknown
+	rowColors[0] = *d;
+	rowColors[1] = *e;
+	rowColors[2] = *e;
+	code = ( (*h == *d)<<2 );
+	*e0 = rowColors[lookup_map[0*16+code]];
+	*e1 = rowColors[lookup_map[1*16+code]];
+	*e2 = rowColors[lookup_map[2*16+code]];
+	*e3 = rowColors[lookup_map[3*16+code]];
 
 	// top and bottom always known
 	for (y=1; y<(src_height-1); y++) {
-		byte *b;
-		byte *d;
-		byte *e;
-		byte *f;
-		byte *h;
-
 		e0 = &dst[y*dst_width*2];
 		e1 = &dst[y*dst_width*2 + 1];
 		e2 = &dst[y*dst_width*2 + dst_width];
@@ -197,55 +202,48 @@ void do_scale2x(unsigned char *src,
 	}
 
 	// special bottom case - h is always unknown
-	{
-		byte *b;
-		byte *d;
-		byte *e;
-		byte *f;
+	e0 = &dst[y*dst_width*2];
+	e1 = &dst[y*dst_width*2 + 1];
+	e2 = &dst[y*dst_width*2 + dst_width];
+	e3 = &dst[y*dst_width*2 + dst_width + 1];
+	b = &src[y * src_width - src_width];
+	e = &src[y * src_width];
+	f = &src[y * src_width + 1];
 
-		e0 = &dst[y*dst_width*2];
-		e1 = &dst[y*dst_width*2 + 1];
-		e2 = &dst[y*dst_width*2 + dst_width];
-		e3 = &dst[y*dst_width*2 + dst_width + 1];
-		b = &src[y * src_width - src_width];
-		e = &src[y * src_width];
-		f = &src[y * src_width + 1];
+	// special left case - d is unknown
+	rowColors[0] = *e;
+	rowColors[1] = *e;
+	rowColors[2] = *f;
+	code = ( (*b == *f)<<0 );
+	*e0 = rowColors[lookup_map[0*16+code]];
+	*e1 = rowColors[lookup_map[1*16+code]];
+	*e2 = rowColors[lookup_map[2*16+code]];
+	*e3 = rowColors[lookup_map[3*16+code]];
+	b++; e++; f++;
+	d = &src[y * src_width]; // (y * src_width - 1) + 1
+	e0+=2; e1+=2; e2+=2; e3+=2;
 
-		// special left case - d is unknown
-		rowColors[0] = *e;
-		rowColors[1] = *e;
-		rowColors[2] = *f;
-		code = ( (*b == *f)<<0 );
-		*e0 = rowColors[lookup_map[0*16+code]];
-		*e1 = rowColors[lookup_map[1*16+code]];
-		*e2 = rowColors[lookup_map[2*16+code]];
-		*e3 = rowColors[lookup_map[3*16+code]];
-		b++; e++; f++;
-		d = &src[y * src_width]; // (y * src_width - 1) + 1
-		e0+=2; e1+=2; e2+=2; e3+=2;
-
-		// normal case
-		for (x=1; x<(src_width-1); x++) {
-			rowColors[0] = *d;
-			rowColors[1] = *e;
-			rowColors[2] = *f;
-			code = ( (*b == *f)<<0 | (*d == *b)<<3 );
-			*e0 = rowColors[lookup_map[0*16+code]];
-			*e1 = rowColors[lookup_map[1*16+code]];
-			*e2 = rowColors[lookup_map[2*16+code]];
-			*e3 = rowColors[lookup_map[3*16+code]];
-			b++; d++; e++; f++;
-			e0+=2; e1+=2; e2+=2; e3+=2;
-		}
-
-		// special right case - f is unknown
+	// normal case
+	for (x=1; x<(src_width-1); x++) {
 		rowColors[0] = *d;
 		rowColors[1] = *e;
-		rowColors[2] = *e;
-		code = ( (*d == *b)<<3 );
+		rowColors[2] = *f;
+		code = ( (*b == *f)<<0 | (*d == *b)<<3 );
 		*e0 = rowColors[lookup_map[0*16+code]];
 		*e1 = rowColors[lookup_map[1*16+code]];
 		*e2 = rowColors[lookup_map[2*16+code]];
 		*e3 = rowColors[lookup_map[3*16+code]];
+		b++; d++; e++; f++;
+		e0+=2; e1+=2; e2+=2; e3+=2;
 	}
+
+	// special right case - f is unknown
+	rowColors[0] = *d;
+	rowColors[1] = *e;
+	rowColors[2] = *e;
+	code = ( (*d == *b)<<3 );
+	*e0 = rowColors[lookup_map[0*16+code]];
+	*e1 = rowColors[lookup_map[1*16+code]];
+	*e2 = rowColors[lookup_map[2*16+code]];
+	*e3 = rowColors[lookup_map[3*16+code]];
 }
