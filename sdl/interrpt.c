@@ -47,16 +47,16 @@ char last_keys[50];
 #ifdef USE_KAILLERA
 
 /* information about the party in this session */
-static int my_player = -1;
-static int my_numplayers = -1;
+int my_player = -1;
+int my_numplayers = -1;
 
 /* semaphore for controlling kaillera thread */
-static SDL_sem *game_start_sem = NULL;
+SDL_sem *game_start_sem = NULL;
 
 /* keys supported on my end */
-static int my_player_up = -1;
-static int my_player_left = -1;
-static int my_player_right = 1;
+int my_player_up = -1;
+int my_player_left = -1;
+int my_player_right = 1;
 
 /* values for the kaillera client interface */
 static char kaillera_app_name[] = "Jump 'n Bump";

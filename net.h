@@ -2,14 +2,14 @@
 
 #include "SDL_net.h"
 
-static int server_said_bye = 0;
-static int buggered_off = 0;
-static int client_player_num = -1;
-static int is_server = 1;
-static int is_net = 0;
+extern int server_said_bye;
+extern int buggered_off;
+extern int client_player_num;
+extern int is_server;
+extern int is_net;
 
-static TCPsocket sock = NULL;
-static SDLNet_SocketSet socketset = NULL;
+extern TCPsocket sock;
+extern SDLNet_SocketSet socketset;
 
 struct NetInfo
 {

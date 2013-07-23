@@ -26,8 +26,8 @@
  */
 
 typedef unsigned char byte;
-static int scale2x_inited = 0;
-static byte lookup_map[4*16];
+int scale2x_inited = 0;
+byte lookup_map[4*16];
 
 void init_scale2x(void)
 {

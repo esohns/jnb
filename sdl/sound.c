@@ -36,12 +36,12 @@
 #ifndef NO_SDL_MIXER
 #include "SDL_mixer.h"
 
-static Mix_Music *current_music = (Mix_Music *) NULL;
+Mix_Music *current_music = (Mix_Music *) NULL;
 #endif
 
 sfx_data sounds[NUM_SFX];
 
-static int SAMPLECOUNT = 512;
+int SAMPLECOUNT = 512;
 
 #define MAX_CHANNELS	32
 

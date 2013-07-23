@@ -10,6 +10,14 @@
 #include <memory.h>
 #include <string.h>
 
+#ifdef BZLIB_SUPPORT
+#include "bzlib.h"
+#endif
+
+#ifdef ZLIB_SUPPORT
+#include "zlib.h"
+#endif
+
 void
 preread_datafile(const char* filename_in)
 {

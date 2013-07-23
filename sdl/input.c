@@ -29,8 +29,8 @@
 
 #include <SDL.h>
 
-static int num_joys=0;
-static SDL_Joystick *joys[4];
+int num_joys=0;
+SDL_Joystick *joys[4];
 
 /* assumes joysticks have at least one button, could check numbuttons first? */
 #define JOY_LEFT(num) (num_joys>num && SDL_JoystickGetAxis(joys[num], 0)<-3200)

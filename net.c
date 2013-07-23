@@ -1,5 +1,14 @@
 #include "net.h"
 
+int server_said_bye = 0;
+int buggered_off = 0;
+int client_player_num = -1;
+int is_server = 1;
+int is_net = 0;
+
+TCPsocket sock = NULL;
+SDLNet_SocketSet socketset = NULL;
+
 void
 bufToPacket(const char* buf, struct NetPacket* pkt)
 {
@@ -360,7 +369,7 @@ update_players_from_server()
 				SDLNet_FreeSocketSet(socketset);
 				SDLNet_TCP_Close(sock);
 				sock = NULL;
-				server_said_byeserver_said_bye = 1;
+				server_said_bye = 1;
 				return(0);
 			} else {
 				player[pkt.arg].enabled = 0;
@@ -476,7 +485,7 @@ init_server(const char* netarg)
 	atexit(SDLNet_Quit);
 
 	SDLNet_ResolveHost(&addr, NULL, JNB_INETPORT);
-	ipstr = SDLNet_ResolveIP(&addr);
+	ipstr = (char*)SDLNet_ResolveIP(&addr);
 	SDLNet_ResolveHost(&addr, ipstr, JNB_INETPORT);
 	printf("SERVER: we are %s (%i.%i.%i.%i:%i).\n", ipstr, (addr.host >> 0) & 0xff, (addr.host >> 8) & 0xff, (addr.host >> 16) & 0xff, (addr.host >> 24) & 0xff, addr.port);
 	net_info[client_player_num].addr = addr;
@@ -526,7 +535,7 @@ init_server(const char* netarg)
 		}
 
 		from = SDLNet_TCP_GetPeerAddress(s);
-		ipstr = SDLNet_ResolveIP(from);
+		ipstr = (char*)SDLNet_ResolveIP(from);
 		printf("SERVER: Got data from %s (%i.%i.%i.%i:%i).\n", ipstr, (from->host >> 0) & 0xff, (from->host >> 8) & 0xff, (from->host >> 16) & 0xff, (from->host >> 24) & 0xff, from->port);
 
 		if (br != NETPKTBUFSIZE) {
@@ -617,7 +626,7 @@ connect_to_server(char* netarg)
 	atexit(SDLNet_Quit);
 
 	SDLNet_ResolveHost(&addr, NULL, JNB_INETPORT);
-	ipstr = SDLNet_ResolveIP(&addr);
+	ipstr = (char*)SDLNet_ResolveIP(&addr);
 	SDLNet_ResolveHost(&addr, ipstr, JNB_INETPORT);
 	printf("CLIENT: we are %s (%i.%i.%i.%i:%i).\n", ipstr, (addr.host >> 0) & 0xff, (addr.host >> 8) & 0xff, (addr.host >> 16) & 0xff, (addr.host >> 24) & 0xff, addr.port);
 

@@ -84,12 +84,12 @@ extern "C" {
 #define JNB_WIDTH  400
 #define JNB_HEIGHT 256
 
-static int screen_width;
-static int screen_height;
-static int screen_pitch;
-static int scale_up;
+int screen_width;
+int screen_height;
+int screen_pitch;
+int scale_up;
 
-static int ai[JNB_MAX_PLAYERS];
+int ai[JNB_MAX_PLAYERS];
 
 #ifndef USE_SDL
 #define KEY_PL1_LEFT  0xcb
@@ -239,22 +239,22 @@ struct mouse_t
 	int but1, but2, but3;
 };
 
-static struct main_info_t main_info;
-static struct player_t player[JNB_MAX_PLAYERS];
-static struct player_anim_t player_anims[7];
-static struct object_t objects[NUM_OBJECTS];
-static struct joy_t joy;
-static struct mouse_t mouse;
+struct main_info_t main_info;
+struct player_t player[JNB_MAX_PLAYERS];
+struct player_anim_t player_anims[7];
+struct object_t objects[NUM_OBJECTS];
+struct joy_t joy;
+struct mouse_t mouse;
 
-static char datfile_name[2048];
+char datfile_name[2048];
 
-static char* background_pic;
-static char* mask_pic;
+char* background_pic;
+char* mask_pic;
 
-static struct gob_t rabbit_gobs;
-static struct gob_t font_gobs;
-static struct gob_t object_gobs;
-static struct gob_t number_gobs;
+struct gob_t rabbit_gobs;
+struct gob_t font_gobs;
+struct gob_t object_gobs;
+struct gob_t number_gobs;
 
 ///* fireworks.c */
 //
