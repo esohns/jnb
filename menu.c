@@ -27,6 +27,8 @@
 #include "menu.h"
 #include "input.h"
 #include "gfx.h"
+#include "interrpt.h"
+#include "dat.h"
 
 char* menu_background;
 

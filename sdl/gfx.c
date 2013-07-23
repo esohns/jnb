@@ -37,23 +37,23 @@
 #else
     #include "jumpnbump64.xpm"
 #endif
-static SDL_Surface* icon;
+SDL_Surface* icon;
 
-static int screen_width         = 400;
-static int screen_height        = 256;
-static int screen_pitch         = 400;
-static int scale_up             = 0;
-static int dirty_block_shift    = 4;
+//int screen_width         = 400;
+//int screen_height        = 256;
+//int screen_pitch         = 400;
+//int scale_up             = 0;
+int dirty_block_shift    = 4;
 
-static SDL_Surface* jnb_surface;
-static int fullscreen           = 0;
-static int vinited              = 0;
-static void* screen_buffer[2];
-static int drawing_enable       = 0;
-static void* background         = NULL;
-static int background_drawn;
-static void* mask               = NULL;
-static int dirty_blocks[2][25*16*2];
+SDL_Surface* jnb_surface;
+int fullscreen           = 0;
+int vinited              = 0;
+void* screen_buffer[2];
+int drawing_enable       = 0;
+void* background         = NULL;
+int background_drawn;
+void* mask               = NULL;
+int dirty_blocks[2][25*16*2];
 
 SDL_Surface*
 load_xpm_from_array(char **xpm)

@@ -24,6 +24,9 @@
  */
 
 #include "globals.h"
+#include "dat.h"
+#include "input.h"
+#include "interrpt.h"
 
 extern unsigned int ban_map[17][22];
 

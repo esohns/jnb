@@ -73,15 +73,15 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>USE_NET;USE_SDL_MIXER;USE_SDL;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>E:\zlib-1.2.5;E:\SDL-1.2.15\include;E:\SDL_mixer-1.2.12\include;E:\SDL_ttf-2.0.11\include;E:\SDL_net-1.2.8\include;$(ProjectDir);$(ProjectDir)\data;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>USE_NET;USE_SDL_MIXER;USE_SDL;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\Temp\zlib-1.2.5;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir);$(ProjectDir)\data;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
       <CompileAs>CompileAsC</CompileAs>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\zlib-1.2.5\contrib\vstudio\vc10\x86\ZlibStatReleaseWithoutAsm;E:\SDL-1.2.15\lib\x86;E:\SDL_mixer-1.2.12\lib\x86;E:\SDL_ttf-2.0.11\lib\x86;E:\SDL_net-1.2.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Temp\zlib-1.2.5\contrib\vstudio\vc10\x86\ZlibStatReleaseWithoutAsm;C:\Temp\SDL-1.2.15\lib\x86;C:\Temp\SDL_mixer-1.2.12\lib\x86;C:\Temp\SDL_ttf-2.0.11\lib\x86;C:\Temp\SDL_net-1.2.8\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDLmain.lib;SDL.lib;SDL_mixer.lib;SDL_ttf.lib;SDL_net.lib;zlibstat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <AdditionalOptions>/NODEFAULTLIB:msvcrt.lib %(AdditionalOptions)</AdditionalOptions>

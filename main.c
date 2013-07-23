@@ -52,22 +52,22 @@
 #define M_PI		3.14159265358979323846
 #endif
 
-struct gob_t rabbit_gobs = { 0 };
-struct gob_t font_gobs = { 0 };
-struct gob_t object_gobs = { 0 };
-struct gob_t number_gobs = { 0 };
+//struct gob_t rabbit_gobs = { 0 };
+//struct gob_t font_gobs = { 0 };
+//struct gob_t object_gobs = { 0 };
+//struct gob_t number_gobs = { 0 };
 
-struct main_info_t main_info;
-struct player_t player[JNB_MAX_PLAYERS];
-struct player_anim_t player_anims[7];
-struct object_t objects[NUM_OBJECTS];
-struct joy_t joy;
-struct mouse_t mouse;
+//struct main_info_t main_info;
+//struct player_t player[JNB_MAX_PLAYERS];
+//struct player_anim_t player_anims[7];
+//struct object_t objects[NUM_OBJECTS];
+//struct joy_t joy;
+//struct mouse_t mouse;
 
-char datfile_name[2048];
+//char datfile_name[2048];
 
-char* background_pic;
-char* mask_pic;
+//char* background_pic;
+//char* mask_pic;
 int flip = 0;
 char pal[768];
 char cur_pal[768];
@@ -2142,7 +2142,7 @@ init_program(int argc, char *argv[], char *pal)
 		return 1;
 #endif
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	if (hook_keyb_handler() != 0)
 		return 1;
