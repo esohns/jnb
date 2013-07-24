@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C++ Express 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnb", "jumpnbump.vcxproj", "{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnbpack", "jnbpack.vcxproj", "{0B267C41-253E-4551-A17E-BAA152541293}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "jnbunpack", "jnbunpack.vcxproj", "{49D1B3DE-A826-4542-A869-EFD9D5D2398E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}.Debug|Win32.Build.0 = Debug|Win32
+		{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}.Release|Win32.ActiveCfg = Release|Win32
+		{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}.Release|Win32.Build.0 = Release|Win32
+		{0B267C41-253E-4551-A17E-BAA152541293}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0B267C41-253E-4551-A17E-BAA152541293}.Debug|Win32.Build.0 = Debug|Win32
+		{0B267C41-253E-4551-A17E-BAA152541293}.Release|Win32.ActiveCfg = Release|Win32
+		{0B267C41-253E-4551-A17E-BAA152541293}.Release|Win32.Build.0 = Release|Win32
+		{49D1B3DE-A826-4542-A869-EFD9D5D2398E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{49D1B3DE-A826-4542-A869-EFD9D5D2398E}.Debug|Win32.Build.0 = Debug|Win32
+		{49D1B3DE-A826-4542-A869-EFD9D5D2398E}.Release|Win32.ActiveCfg = Release|Win32
+		{49D1B3DE-A826-4542-A869-EFD9D5D2398E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -11,33 +11,40 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dat.c" />
-    <ClCompile Include="filter.c" />
-    <ClCompile Include="fireworks.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="menu.c" />
-    <ClCompile Include="net.c" />
-    <ClCompile Include="sdl\gfx.c" />
-    <ClCompile Include="sdl\input.c" />
-    <ClCompile Include="sdl\interrpt.c" />
-    <ClCompile Include="sdl\sfx.c" />
+    <ClInclude Include="..\..\config.h" />
+    <ClInclude Include="..\..\dat.h" />
+    <ClInclude Include="..\..\filter.h" />
+    <ClInclude Include="..\..\gfx.h" />
+    <ClInclude Include="..\..\globals.h" />
+    <ClInclude Include="..\..\input.h" />
+    <ClInclude Include="..\..\interrpt.h" />
+    <ClInclude Include="..\..\menu.h" />
+    <ClInclude Include="..\..\net.h" />
+    <ClInclude Include="..\..\sfx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h" />
-    <ClInclude Include="dat.h" />
-    <ClInclude Include="sfx.h" />
-    <ClInclude Include="filter.h" />
-    <ClInclude Include="gfx.h" />
-    <ClInclude Include="globals.h" />
-    <ClInclude Include="input.h" />
-    <ClInclude Include="interrpt.h" />
-    <ClInclude Include="menu.h" />
-    <ClInclude Include="net.h" />
+    <ClCompile Include="..\..\dat.c" />
+    <ClCompile Include="..\..\filter.c" />
+    <ClCompile Include="..\..\fireworks.c" />
+    <ClCompile Include="..\..\main.c" />
+    <ClCompile Include="..\..\menu.c" />
+    <ClCompile Include="..\..\net.c" />
+    <ClCompile Include="..\..\sdl\gfx.c" />
+    <ClCompile Include="..\..\sdl\input.c" />
+    <ClCompile Include="..\..\sdl\interrpt.c" />
+    <ClCompile Include="..\..\sdl\sfx.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\jumpnbump.ico" />
+    <None Include="..\..\sdl\jumpnbump128.xpm" />
+    <None Include="..\..\sdl\jumpnbump32.xpm" />
+    <None Include="..\..\sdl\jumpnbump64.xpm" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>jumpnbump</RootNamespace>
+    <ProjectName>jnb</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,7 +83,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>BZLIB_SUPPORT;ZLIB_SUPPORT;USE_NET;USE_SDL_MIXER;USE_SDL;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir);$(ProjectDir)\data;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir)..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -114,7 +121,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BZLIB_SUPPORT;ZLIB_SUPPORT;USE_NET;USE_SDL_MIXER;USE_SDL;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir);$(ProjectDir)\data;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir)..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAs>CompileAsC</CompileAs>
