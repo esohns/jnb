@@ -1,1 +1,13 @@
 Debug
+
+Release
+
+ipch
+
+/jumpnbump.sdf
+/jumpnbump.opensdf
+
+/contrib/vs2010/jumpnbump.suo
+/contrib/vs2010/jumpnbump.opensdf
+
+/contrib/vs2010/jumpnbump.sdf

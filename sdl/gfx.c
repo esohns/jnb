@@ -35,12 +35,13 @@
 #include "filter.h"
 
 #ifdef _MSC_VER
-    #include "jumpnbump32.xpm"
+#include "jumpnbump32.xpm"
 #elif __APPLE__
-    #include "jumpnbump128.xpm"
+#include "jumpnbump128.xpm"
 #else
-    #include "jumpnbump64.xpm"
+#include "jumpnbump64.xpm"
 #endif
+
 SDL_Surface* icon;
 
 int screen_width         = 400;
@@ -50,6 +51,7 @@ int scale_up             = 0;
 int dirty_block_shift    = 4;
 
 SDL_Surface* jnb_surface;
+
 int fullscreen           = 0;
 int vinited              = 0;
 void* screen_buffer[2];
@@ -92,7 +94,7 @@ unsigned int ban_map[17][22] = {
 };
 
 SDL_Surface*
-load_xpm_from_array(char **xpm)
+load_xpm_from_array(char** xpm)
 {
 #define NEXT_TOKEN { \
 	while ((*p != ' ') && (*p != '\t')) p++; \
@@ -248,8 +250,6 @@ open_screen()
 	dirty_blocks[0] = malloc(sizeof(int)*25*16+1000);
 	dirty_blocks[1] = malloc(sizeof(int)*25*16+1000);
 */
-
-	return;
 }
 
 void
@@ -266,7 +266,6 @@ fs_toggle()
 void
 wait_vrt(int mix)
 {
-	return;
 }
 
 void
@@ -490,7 +489,7 @@ get_block(int page, int x, int y, int width, int height, void* buffer)
 		return;
 
 	vga_ptr = get_vgaptr(page, x, y);
-	buffer_ptr = buffer;
+	buffer_ptr = (unsigned char*)buffer;
 	for (h = 0; h < height; h++) {
 		memcpy(buffer_ptr, vga_ptr, width);
 		vga_ptr += screen_pitch;
@@ -527,7 +526,7 @@ put_block(int page, int x, int y, int width, int height, void* buffer)
 		return;
 
 	vga_ptr = get_vgaptr(page, x, y);
-	buffer_ptr = buffer;
+	buffer_ptr = (unsigned char*)buffer;
 	for (h = 0; h < height; h++) {
 		memcpy(vga_ptr, buffer_ptr, width);
 		vga_ptr += screen_pitch;

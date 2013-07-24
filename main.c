@@ -23,15 +23,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//#include <stdlib.h>
-//#include <stdio.h>
 #include <assert.h>
-//#include <string.h>
-//#if defined _WIN32 || defined _WIN64
-//#else
-//#include <strings.h>
-//#endif /* WINDOWS platform */
-
 #include <time.h>
 #if defined _WIN32 || defined _WIN64
 #define _USE_MATH_DEFINES
@@ -2015,7 +2007,7 @@ draw_leftovers(int page)
 }
 
 int
-init_level(int level, char *pal)
+init_level(int level, char* pal)
 {
 	unsigned char* handle;
 	int c1, c2;
@@ -2030,7 +2022,7 @@ init_level(int level, char *pal)
 		return 1;
 	}
 	if (flip)
-		flip_pixels(background_pic);
+		flip_pixels((unsigned char*)background_pic);
 	if ((handle = dat_open("mask.pcx")) == 0) {
 		strcpy(main_info.error_str, "Error loading 'mask.pcx', aborting...\n");
 		return 1;
@@ -2040,7 +2032,7 @@ init_level(int level, char *pal)
 		return 1;
 	}
 	if (flip)
-		flip_pixels(mask_pic);
+		flip_pixels((unsigned char*)mask_pic);
 	register_mask(mask_pic);
 
 	for (c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
@@ -2113,10 +2105,10 @@ deinit_level()
 #endif
 
 int
-init_program(int argc, char *argv[], char *pal)
+init_program(int argc, char** argv, char* pal)
 {
 	char* netarg = NULL;
-	unsigned char* handle = (unsigned char*)NULL;
+	unsigned char* handle = NULL;
 	int c1 = 0, c2 = 0;
 	int load_flag = 0;
 	int force2, force3;
@@ -2145,7 +2137,7 @@ init_program(int argc, char *argv[], char *pal)
 	if (hook_keyb_handler() != 0)
 		return 1;
 
-	memset(&main_info, 0, sizeof(main_info));
+	memset(&main_info, 0, sizeof(struct main_info_t));
 
 	strcpy(datfile_name, DATA_PATH);
 
@@ -2177,7 +2169,7 @@ init_program(int argc, char *argv[], char *pal)
 				flip = 1;
 			else if (stricmp(argv[c1], "-dat") == 0) {
 				if (c1 < (argc - 1)) {
-					FILE *f;
+					FILE* f;
 
 					if ((f = fopen(argv[c1 + 1], "rb")) != NULL) {
 						fclose(f);
