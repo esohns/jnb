@@ -23,87 +23,79 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "globals.h"
-#include "menu.h"
-#include "dat.h"
-#include "input.h"
-#include "interrpt.h"
+//#include <stdlib.h>
+//#include <stdio.h>
+#include <assert.h>
+//#include <string.h>
+//#if defined _WIN32 || defined _WIN64
+//#else
+//#include <strings.h>
+//#endif /* WINDOWS platform */
 
+#include <time.h>
+#if defined _WIN32 || defined _WIN64
+#define _USE_MATH_DEFINES
+#endif /* WINDOWS platform */
+#include <math.h>
+#ifndef M_PI
+#define M_PI	3.14159265358979323846
+#endif /* M_PI */
+#include <sys/stat.h>
 #include <fcntl.h>
 
-#ifndef _MSC_VER
+#if defined _WIN32 || defined _WIN64
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <io.h>
+#elif DOS
+#include <conio.h>
+#include <dpmi.h>
+#include <sys/nearptr.h>
+#include <pc.h>
+#else
 #include <unistd.h>
-#endif
-
-#ifdef BZLIB_SUPPORT
-#include "bzlib.h"
-#endif
+#endif /* platform */
 
 #ifdef ZLIB_SUPPORT
 #include "zlib.h"
-#endif
+#endif /* ZLIB_SUPPORT */
 
+#ifdef BZLIB_SUPPORT
+#include "bzlib.h"
+#endif /* BZLIB_SUPPORT */
+
+#ifdef USE_SDL
+#include "SDL.h"
+//
+#ifdef USE_SDL_MIXER
+#include "SDL_mixer.h"
+#endif /* USE_SDL_MIXER */
+//
 #ifdef USE_NET
 #include "SDL_net.h"
+#endif /* USE_NET */
+#endif /* USE_SDL */
+
+#include "globals.h"
+#include "config.h"
+
+#include "gfx.h"
+#include "sfx.h"
+#include "interrpt.h"
+#include "input.h"
+
+#include "dat.h"
+#include "menu.h"
+
+#ifdef USE_NET
 #include "net.h"
 #endif /* USE_NET */
 
-#ifndef M_PI
-#define M_PI		3.14159265358979323846
-#endif
-
-//struct gob_t rabbit_gobs = { 0 };
-//struct gob_t font_gobs = { 0 };
-//struct gob_t object_gobs = { 0 };
-//struct gob_t number_gobs = { 0 };
-
-//struct main_info_t main_info;
-//struct player_t player[JNB_MAX_PLAYERS];
-//struct player_anim_t player_anims[7];
-//struct object_t objects[NUM_OBJECTS];
-//struct joy_t joy;
-//struct mouse_t mouse;
-
-//char datfile_name[2048];
-
-//char* background_pic;
-//char* mask_pic;
-int flip = 0;
-char pal[768];
-char cur_pal[768];
-
-int ai[JNB_MAX_PLAYERS];
-
-unsigned int ban_map[17][22] = {
-	{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0},
-	{1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1},
-	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-	{1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
-	{1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
-	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
-	{2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 1, 3, 3, 3, 1, 1, 1},
-	{2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-};
-
-#define GET_BAN_MAP_XY(x, y) ban_map[(y) >> 4][(x) >> 4]
-
-struct {
-	int num_frames;
-	int restart_frame;
-	struct {
-		int image;
-		int ticks;
-	} frame[10];
-} object_anims[8] = {
+struct main_info_t main_info;
+struct player_t player[JNB_MAX_PLAYERS];
+struct player_anim_t player_anims[7];
+struct object_t objects[NUM_OBJECTS];
+struct object_anim_t object_anims[8] = {
 	{
 		6, 0, {
 			{
@@ -219,9 +211,12 @@ struct {
 	}
 };
 
-int flies_enabled = 1;
+char datfile_name[2048];
 
-struct {
+int ai[JNB_MAX_PLAYERS];
+
+int flies_enabled = 1;
+struct flies_t {
 	int x, y;
 	int old_x, old_y;
 	int old_draw_x, old_draw_y;
@@ -229,7 +224,7 @@ struct {
 	int back_defined[2];
 } flies[NUM_FLIES];
 
-struct {
+struct leftovers_t {
 	struct {
 		short num_pobs;
 		struct {
@@ -899,12 +894,12 @@ menu_loop()
 }
 
 int
-main(int argc, char* argv[])
+main(int argc_in, char** argv_in)
 {
-	int result;
+	int result = -1;
 
-	if (init_program(argc, argv, pal) != 0)
-		deinit_program();
+	result = init_program(argc_in, argv_in, pal);
+	if (result != 0) deinit_program();
 
 	if (main_info.fireworks == 1) {
 		fireworks();
@@ -913,7 +908,10 @@ main(int argc, char* argv[])
 
 	result = menu_loop();
 
-	deinit_program();
+	deinit_program(result);
+
+	// *NOTE*: not reached
+	assert(0);
 
 	return result;
 }
@@ -2122,7 +2120,7 @@ init_program(int argc, char *argv[], char *pal)
 	int c1 = 0, c2 = 0;
 	int load_flag = 0;
 	int force2, force3;
-	sfx_data fly;
+	struct sfx_data fly;
 	int player_anim_data[] = {
 		1, 0, 0, 0x7fff, 0, 0, 0, 0, 0, 0,
 		4, 0, 0, 4, 1, 4, 2, 4, 3, 4,

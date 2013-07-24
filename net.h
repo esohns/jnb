@@ -1,6 +1,16 @@
-#include "globals.h"
 
+#ifndef __NET_H
+#define __NET_H
+
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+
+#ifdef USE_SDL
 #include "SDL_net.h"
+#endif /* USE_SDL */
+
+#include "globals.h"
 
 extern int server_said_bye;
 extern int buggered_off;
@@ -10,14 +20,13 @@ extern int is_net;
 
 extern TCPsocket sock;
 extern SDLNet_SocketSet socketset;
-
 struct NetInfo
 {
 	TCPsocket        sock;
 	IPaddress        addr;
 	SDLNet_SocketSet socketset;
 };
-struct NetInfo net_info[JNB_MAX_PLAYERS];
+extern struct NetInfo net_info[JNB_MAX_PLAYERS];
 
 struct NetPacket
 {
@@ -74,3 +83,9 @@ void serverSendKillPacket(int,  // killer
 void update_players_from_clients();
 void init_server(const char*); // netarg
 void connect_to_server(char*); // netarg
+
+//#ifdef __cplusplus
+//}
+//#endif
+
+#endif

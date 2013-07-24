@@ -20,12 +20,12 @@
     <ClCompile Include="sdl\gfx.c" />
     <ClCompile Include="sdl\input.c" />
     <ClCompile Include="sdl\interrpt.c" />
-    <ClCompile Include="sdl\sound.c" />
+    <ClCompile Include="sdl\sfx.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="config.h" />
     <ClInclude Include="dat.h" />
-    <ClInclude Include="dj.h" />
+    <ClInclude Include="sfx.h" />
     <ClInclude Include="filter.h" />
     <ClInclude Include="gfx.h" />
     <ClInclude Include="globals.h" />

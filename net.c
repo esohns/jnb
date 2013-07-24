@@ -1,4 +1,10 @@
+#include <assert.h>
+
 #include "net.h"
+
+#include "gfx.h"
+#include "sfx.h"
+#include "input.h"
 
 int server_said_bye = 0;
 int buggered_off = 0;
@@ -8,6 +14,7 @@ int is_net = 0;
 
 TCPsocket sock = NULL;
 SDLNet_SocketSet socketset = NULL;
+struct NetInfo net_info[JNB_MAX_PLAYERS];
 
 void
 bufToPacket(const char* buf, struct NetPacket* pkt)

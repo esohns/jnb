@@ -23,12 +23,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "globals.h"
-#include "gfx.h"
-#include "filter.h"
-
-#include <SDL.h>
 #include <assert.h>
+
+#ifdef USE_SDL
+#include "SDL.h"
+#endif /* USE_SDL */
+
+#include "gfx.h"
+
+#include "globals.h"
+#include "filter.h"
 
 #ifdef _MSC_VER
     #include "jumpnbump32.xpm"
@@ -39,10 +43,10 @@
 #endif
 SDL_Surface* icon;
 
-//int screen_width         = 400;
-//int screen_height        = 256;
-//int screen_pitch         = 400;
-//int scale_up             = 0;
+int screen_width         = 400;
+int screen_height        = 256;
+int screen_pitch         = 400;
+int scale_up             = 0;
 int dirty_block_shift    = 4;
 
 SDL_Surface* jnb_surface;
@@ -54,6 +58,38 @@ void* background         = NULL;
 int background_drawn;
 void* mask               = NULL;
 int dirty_blocks[2][25*16*2];
+
+struct gob_t rabbit_gobs = { 0 };
+struct gob_t font_gobs = { 0 };
+struct gob_t object_gobs = { 0 };
+struct gob_t number_gobs = { 0 };
+
+char* background_pic;
+char* mask_pic;
+
+int flip = 0;
+char pal[768];
+char cur_pal[768];
+
+unsigned int ban_map[17][22] = {
+	{1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0},
+	{1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1},
+	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+	{1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1},
+	{1, 0, 1, 1, 1, 1, 0, 0, 0, 0, 3, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1},
+	{1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+	{1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1},
+	{2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 0, 0, 0, 0, 0, 1, 3, 3, 3, 1, 1, 1},
+	{2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+	{1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
 
 SDL_Surface*
 load_xpm_from_array(char **xpm)

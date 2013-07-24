@@ -23,16 +23,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "globals.h"
-#include "dat.h"
-#include "input.h"
-#include "interrpt.h"
+#include <string.h>
+#if defined _WIN32 || defined _WIN64
+#else
+#include <strings.h>
+#endif /* WINDOWS platform */
 
-extern unsigned int ban_map[17][22];
+#include "globals.h"
+
+#include "gfx.h"
+#include "sfx.h"
+#include "interrpt.h"
+#include "input.h"
+
+#include "dat.h"
 
 void fireworks(void)
 {
-	char *handle;
+	char* handle;
 	int c1, c2;
 	int s1, s2, s3;
 	char pal[768];

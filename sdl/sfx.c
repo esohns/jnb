@@ -23,50 +23,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "globals.h"
-#include "dat.h"
-//#include <limits.h>
-#include <stdlib.h>
-//#include <cstdlib>
-#ifndef _MSC_VER
+#if defined _WIN32 || defined _WIN64
+#define WIN32_LEAN_AND_MEAN
+#elif DOS
+#include <pc.h>
+#include <dpmi.h>
+#include <go32.h>
+#include <sys/nearptr.h>
+#else
 #include <unistd.h>
-#endif
-#include "SDL.h"
+#endif /* platform */
+
+#include "globals.h"
+#include "sfx.h"
+
+#include "dat.h"
 
 #ifndef NO_SDL_MIXER
+#ifdef USE_SDL
+#include "SDL.h"
+#ifdef USE_SDL_MIXER
 #include "SDL_mixer.h"
+Mix_Music* current_music = (Mix_Music*)NULL;
+#endif /* USE_SDL_MIXER */
+#endif /* USE_SDL */
+#endif /* NO_SDL_MIXER */
 
-Mix_Music *current_music = (Mix_Music *) NULL;
-#endif
-
-sfx_data sounds[NUM_SFX];
-
-int SAMPLECOUNT = 512;
-
-#define MAX_CHANNELS	32
-
-typedef struct {
-	/* loop flag */
-	int loop;
-	/* The channel step amount... */
-	unsigned int step;
-	/* ... and a 0.16 bit remainder of last step. */
-	unsigned int stepremainder;
-	unsigned int samplerate;
-	/* The channel data pointers, start and end. */
-	signed short* data;
-	signed short* startdata;
-	signed short* enddata;
-	/* Hardware left and right channel volume lookup. */
-	int leftvol;
-	int rightvol;
-} channel_info_t;
-
-channel_info_t channelinfo[MAX_CHANNELS];
-
+struct sfx_data sounds[NUM_SFX];
+struct channel_info_t channelinfo[MAX_CHANNELS];
 /* Sample rate in samples/second */
 int audio_rate = 44100;
 int global_sfx_volume = 0;
+
 /*
 // This function loops all active (internal) sound
 //  channels, retrieves a given number of samples
@@ -78,14 +66,13 @@ int global_sfx_volume = 0;
 //
 // This function currently supports only 16bit.
 */
-
-static void stopchan(int i)
+static void
+stopchan(int i)
 {
 	if (channelinfo[i].data) {
-		memset(&channelinfo[i], 0, sizeof(channel_info_t));
+		memset(&channelinfo[i], 0, sizeof(struct channel_info_t));
 	}
 }
-
 
 /*
 // This function adds a sound to the
@@ -94,7 +81,8 @@ static void stopchan(int i)
 //  (eight, usually) of internal channels.
 // Returns a handle.
 */
-int addsfx(signed short *data, int len, int loop, int samplerate, int channel)
+int
+addsfx(signed short* data, int len, int loop, int samplerate, int channel)
 {
 	stopchan(channel);
 
@@ -114,7 +102,8 @@ int addsfx(signed short *data, int len, int loop, int samplerate, int channel)
 }
 
 
-static void updateSoundParams(int slot, int volume)
+static void
+updateSoundParams(int slot, int volume)
 {
 	int rightvol;
 	int leftvol;
@@ -147,7 +136,8 @@ static void updateSoundParams(int slot, int volume)
 }
 
 
-void mix_sound(void *unused, Uint8 *stream, int len)
+void
+mix_sound(void* unused, Uint8* stream, int len)
 {
 	/* Mix current sound data. */
 	/* Data, from raw sound, for right and left. */
@@ -252,7 +242,8 @@ void mix_sound(void *unused, Uint8 *stream, int len)
 
 /* misc handling */
 
-char dj_init(void)
+char
+dj_init(void)
 {
 	Uint16 audio_format = MIX_DEFAULT_FORMAT;
 	int audio_channels = 2;
@@ -293,7 +284,8 @@ char dj_init(void)
 	return 0;
 }
 
-void dj_deinit(void)
+void
+dj_deinit(void)
 {
 	if (main_info.no_sound)
 		return;
@@ -310,38 +302,46 @@ void dj_deinit(void)
 	SDL_Quit();
 }
 
-void dj_start(void)
+void
+dj_start(void)
 {
 }
 
-void dj_stop(void)
+void
+dj_stop(void)
 {
 }
 
-char dj_autodetect_sd(void)
-{
-	return 0;
-}
-
-char dj_set_stereo(char flag)
+char
+dj_autodetect_sd(void)
 {
 	return 0;
 }
 
-void dj_set_auto_mix(char flag)
+char
+dj_set_stereo(char flag)
+{
+	return 0;
+}
+
+void
+dj_set_auto_mix(char flag)
 {
 }
 
-unsigned short dj_set_mixing_freq(unsigned short freq)
+unsigned short
+dj_set_mixing_freq(unsigned short freq)
 {
 	return freq;
 }
 
-void dj_set_dma_time(unsigned short time)
+void
+dj_set_dma_time(unsigned short time)
 {
 }
 
-void dj_set_nosound(char flag)
+void
+dj_set_nosound(char flag)
 {
 }
 
@@ -353,12 +353,14 @@ void dj_mix(void)
 
 /* sfx handling */
 
-char dj_set_num_sfx_channels(char num_channels)
+char
+dj_set_num_sfx_channels(char num_channels)
 {
 	return num_channels;
 }
 
-void dj_set_sfx_volume(char volume)
+void
+dj_set_sfx_volume(char volume)
 {
 	if (main_info.no_sound)
 		return;
@@ -368,7 +370,8 @@ void dj_set_sfx_volume(char volume)
 	SDL_UnlockAudio();
 }
 
-void dj_play_sfx(unsigned char sfx_num, unsigned short freq, char volume, char panning, unsigned short delay, char channel)
+void
+dj_play_sfx(unsigned char sfx_num, unsigned short freq, char volume, char panning, unsigned short delay, char channel)
 {
 	int slot;
 
@@ -390,25 +393,28 @@ void dj_play_sfx(unsigned char sfx_num, unsigned short freq, char volume, char p
 	SDL_UnlockAudio();
 }
 
-char dj_get_sfx_settings(unsigned char sfx_num, sfx_data *data)
+char
+dj_get_sfx_settings(unsigned char sfx_num, struct sfx_data* data)
 {
 	if (main_info.no_sound)
 		return 0;
 
-	memcpy(data, &sounds[sfx_num], sizeof(sfx_data));
+	memcpy(data, &sounds[sfx_num], sizeof(struct sfx_data));
 	return 0;
 }
 
-char dj_set_sfx_settings(unsigned char sfx_num, sfx_data *data)
+char
+dj_set_sfx_settings(unsigned char sfx_num, struct sfx_data* data)
 {
 	if (main_info.no_sound)
 		return 0;
 
-	memcpy(&sounds[sfx_num], data, sizeof(sfx_data));
+	memcpy(&sounds[sfx_num], data, sizeof(struct sfx_data));
 	return 0;
 }
 
-void dj_set_sfx_channel_volume(char channel_num, char volume)
+void
+dj_set_sfx_channel_volume(char channel_num, char volume)
 {
 	if (main_info.no_sound)
 		return;
@@ -418,7 +424,8 @@ void dj_set_sfx_channel_volume(char channel_num, char volume)
 	SDL_UnlockAudio();
 }
 
-void dj_stop_sfx_channel(char channel_num)
+void
+dj_stop_sfx_channel(char channel_num)
 {
 	if (main_info.no_sound)
 		return;
@@ -428,7 +435,8 @@ void dj_stop_sfx_channel(char channel_num)
 	SDL_UnlockAudio();
 }
 
-char dj_load_sfx(unsigned char * file_handle, char *filename, int file_length, char sfx_type, unsigned char sfx_num)
+char
+dj_load_sfx(unsigned char* file_handle, char* filename, int file_length, char sfx_type, unsigned char sfx_num)
 {
 	unsigned int i;
 	unsigned char *src;
@@ -443,7 +451,7 @@ char dj_load_sfx(unsigned char * file_handle, char *filename, int file_length, c
 
 	sounds[sfx_num].length = file_length / 2;
 	src = sounds[sfx_num].buf;
-	dest = (unsigned short *)sounds[sfx_num].buf;
+	dest = (unsigned short*)sounds[sfx_num].buf;
 	for (i=0; i<sounds[sfx_num].length; i++)
 	{
 		unsigned short temp;
@@ -455,27 +463,29 @@ char dj_load_sfx(unsigned char * file_handle, char *filename, int file_length, c
 	return 0;
 }
 
-void dj_free_sfx(unsigned char sfx_num)
+void
+dj_free_sfx(unsigned char sfx_num)
 {
 	if (main_info.no_sound)
 		return;
 
 	free(sounds[sfx_num].buf);
-	memset(&sounds[sfx_num], 0, sizeof(sfx_data));
+	memset(&sounds[sfx_num], 0, sizeof(struct sfx_data));
 }
 
 /* mod handling */
 
-char dj_ready_mod(char mod_num)
+char
+dj_ready_mod(char mod_num)
 {
 #ifndef NO_SDL_MIXER
-	FILE *tmp;
+	FILE* tmp;
 # if ((defined _MSC_VER) || (defined __MINGW32__))
 	char filename[] = "jnb.tmpmusic.mod";
 # else
 	char filename[] = "/tmp/jnb.tmpmusic.mod";
 # endif
-	unsigned char *fp;
+	unsigned char* fp;
 	int len;
 
 	if (main_info.no_sound)
@@ -534,7 +544,8 @@ char dj_ready_mod(char mod_num)
 	return 0;
 }
 
-char dj_start_mod(void)
+char
+dj_start_mod(void)
 {
 #ifndef NO_SDL_MIXER
 	if (main_info.no_sound)
@@ -547,7 +558,8 @@ char dj_start_mod(void)
 	return 0;
 }
 
-void dj_stop_mod(void)
+void
+dj_stop_mod(void)
 {
 #ifndef NO_SDL_MIXER
 	if (main_info.no_sound)
@@ -557,7 +569,8 @@ void dj_stop_mod(void)
 #endif
 }
 
-void dj_set_mod_volume(char volume)
+void
+dj_set_mod_volume(char volume)
 {
 #ifndef NO_SDL_MIXER
 	if (main_info.no_sound)
@@ -567,11 +580,13 @@ void dj_set_mod_volume(char volume)
 #endif
 }
 
-char dj_load_mod(unsigned char * file_handle, char *filename, char mod_num)
+char
+dj_load_mod(unsigned char* file_handle, char* filename, char mod_num)
 {
 	return 0;
 }
 
-void dj_free_mod(char mod_num)
+void
+dj_free_mod(char mod_num)
 {
 }

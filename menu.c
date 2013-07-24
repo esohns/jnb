@@ -23,12 +23,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#ifdef USE_SDL
+#include "SDL.h"
+#endif /* USE_SDL */
+
 #include "globals.h"
-#include "menu.h"
-#include "input.h"
+#include "config.h"
+
 #include "gfx.h"
+#include "sfx.h"
+#include "input.h"
 #include "interrpt.h"
+
 #include "dat.h"
+#include "menu.h"
 
 char* menu_background;
 
@@ -66,7 +74,7 @@ char *message[] = {
 	""
 };
 
-#define NUM_MESSAGES (sizeof(message)/sizeof(char *))
+#define NUM_MESSAGES (sizeof(message)/sizeof(char*))
 
 int
 menu()
