@@ -23,7 +23,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-<<<<<<< HEAD
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/stat.h>
@@ -44,28 +43,6 @@
 #else
 #include <unistd.h>
 #endif /* platform */
-=======
-//#include <stdio.h>
-//#include <stdlib.h>
-#include <fcntl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <string.h>
-
-#ifdef LINUX
-#include <getopt.h>
-#endif
-
-#ifndef _MSC_VER
-#include <unistd.h>
-#else
-#include <io.h>
-#endif
-
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
->>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 
 struct DirEntry {
 	char filename[12];
@@ -77,11 +54,7 @@ int
 main(int argc, char** argv)
 {
 	int fd;
-<<<<<<< HEAD
 	struct DirEntry* datafile;
-=======
-	DirEntry* datafile;
->>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 	int num_entries, i;
 	int c;
 	char* outfile = NULL;
@@ -130,11 +103,7 @@ main(int argc, char** argv)
 
 	/* prepare to pack things - get sizes and calculate offsets */
 	printf("%u files to pack\n", num_entries);
-<<<<<<< HEAD
 	datafile = calloc(num_entries, sizeof(struct DirEntry));
-=======
-	datafile = calloc(num_entries, sizeof(DirEntry));
->>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 
 	/* skip past the directory structure */
 	offset = 4 + (num_entries * 20);

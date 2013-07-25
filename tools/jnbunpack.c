@@ -25,7 +25,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-<<<<<<< HEAD
 #include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
@@ -56,31 +55,6 @@ main(int argc, char** argv)
 {
     int fd;
     struct DirEntry* datafile;
-=======
-#include <fcntl.h>
-#include <string.h>
-#include <sys/types.h>
-#ifndef _MSC_VER
-#include <unistd.h>
-#else
-#include <io.h>
-#endif
-
-typedef struct {
-    char filename[12];
-    unsigned int offset;
-    unsigned int size;
-} DirEntry;
-
-#ifndef O_BINARY
-#define O_BINARY 0
-#endif
-
-int main(int argc, char **argv)
-{
-    int fd;
-    DirEntry *datafile;
->>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
     int num_entries, i;
 
     if (argc < 2) {
@@ -98,13 +72,8 @@ int main(int argc, char **argv)
 
     printf("%d entries in datafile\n", num_entries);
 
-<<<<<<< HEAD
     datafile = calloc(num_entries, sizeof(struct DirEntry));
     read(fd, datafile, num_entries * sizeof(struct DirEntry));
-=======
-    datafile = calloc(num_entries, sizeof(DirEntry));
-    read(fd, datafile, num_entries * sizeof(DirEntry));
->>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
     printf("Directory Listing:\n");
     for (i = 0; i < num_entries; i++) {
 	char filename[14];
