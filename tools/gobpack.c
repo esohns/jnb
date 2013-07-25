@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+<<<<<<< HEAD
 struct gob_t {
 	int    num_images;
 	int*   width;
@@ -16,6 +17,21 @@ static void
 read_pcx(FILE* handle, void* buf, int buf_len, char* pal)
 {
 	unsigned char* buffer = buf;
+=======
+typedef struct {
+	int num_images;
+	int *width;
+	int *height;
+	int *hs_x;
+	int *hs_y;
+	void **data;
+	void **orig_data;
+} gob_t;
+
+static void read_pcx(FILE * handle, void *buf, int buf_len, char *pal)
+{
+	unsigned char *buffer=buf;
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 	short c1;
 	short a, b;
 	long ofs1;
@@ -40,8 +56,12 @@ read_pcx(FILE* handle, void* buf, int buf_len, char* pal)
 	}
 }
 
+<<<<<<< HEAD
 static void
 write_pcx(FILE* pcxfile, unsigned char* data, int width, int height, unsigned char* palette)
+=======
+static void write_pcx(FILE *pcxfile, unsigned char *data, int width, int height, unsigned char *palette)
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 {
 	int    i;
 
@@ -94,10 +114,16 @@ write_pcx(FILE* pcxfile, unsigned char* data, int width, int height, unsigned ch
 			fputc(i / 3, pcxfile);
 }
 
+<<<<<<< HEAD
 int
 read_gob(FILE* handle, struct gob_t* gob, int len)
 {
 	unsigned char* gob_data;
+=======
+int read_gob(FILE *handle, gob_t *gob, int len)
+{
+	unsigned char *gob_data;
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 	int i;
 
 	gob_data = malloc(len);
@@ -131,8 +157,12 @@ read_gob(FILE* handle, struct gob_t* gob, int len)
 	return 0;
 }
 
+<<<<<<< HEAD
 int
 write_gob(FILE* handle, struct gob_t* gob)
+=======
+int write_gob(FILE *handle, gob_t *gob)
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 {
 	int i;
 	int offset;
@@ -169,6 +199,7 @@ write_gob(FILE* handle, struct gob_t* gob)
 	return 0;
 }
 
+<<<<<<< HEAD
 int
 main(int argc, char** argv)
 {
@@ -178,6 +209,16 @@ main(int argc, char** argv)
 	int len;
 	struct gob_t gob;
 	char* filename = NULL;
+=======
+int main(int argc, char **argv)
+{
+	int usage = 0;
+	int unpack = 0;
+	FILE *f;
+	int len;
+	gob_t gob;
+	char *filename = NULL;
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 
 	if (argc < 2)
 		usage = 1;
@@ -202,10 +243,17 @@ main(int argc, char** argv)
 		int x_count, y_count;
 		int xi, yi;
 		int i;
+<<<<<<< HEAD
 		unsigned char* data;
 		unsigned char* dst;
 		unsigned char palette[768];
 		unsigned char* pal = NULL;
+=======
+		unsigned char *data;
+		unsigned char *dst;
+		unsigned char palette[768];
+		unsigned char *pal = NULL;
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 
 		if (argc > 3) {
 			f = fopen(argv[3], "rb");
@@ -322,7 +370,11 @@ main(int argc, char** argv)
 
 		fclose(f);
 	} else {
+<<<<<<< HEAD
 		unsigned char* data;
+=======
+		unsigned char *data;
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 		int i = 0;
 		int x_pos = 0, y_pos = 0;
 

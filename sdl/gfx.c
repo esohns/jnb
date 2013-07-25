@@ -34,6 +34,7 @@
 #include "globals.h"
 #include "filter.h"
 
+<<<<<<< HEAD
 #ifdef __APPLE__
 #include "jnb128.xpm"
 #elif defined _WIN32 || defined _WIN64
@@ -41,6 +42,15 @@
 #else
 #include "jnb64.xpm"
 #endif /* platform */
+=======
+#ifdef _MSC_VER
+#include "jumpnbump32.xpm"
+#elif __APPLE__
+#include "jumpnbump128.xpm"
+#else
+#include "jumpnbump64.xpm"
+#endif
+>>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
 
 SDL_Surface* icon;
 
