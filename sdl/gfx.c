@@ -34,13 +34,13 @@
 #include "globals.h"
 #include "filter.h"
 
-#ifdef _MSC_VER
-#include "jumpnbump32.xpm"
-#elif __APPLE__
-#include "jumpnbump128.xpm"
+#ifdef __APPLE__
+#include "jnb128.xpm"
+#elif defined _WIN32 || defined _WIN64
+#include "jnb32.xpm"
 #else
-#include "jumpnbump64.xpm"
-#endif
+#include "jnb64.xpm"
+#endif /* platform */
 
 SDL_Surface* icon;
 
@@ -215,6 +215,15 @@ open_screen()
 		exit(EXIT_FAILURE);
 	}
 
+	icon = load_xpm_from_array(jumpnbump_xpm);
+	if (icon == NULL) {
+	    printf("Couldn't load icon\n");
+	} else {
+	    SDL_WM_SetIcon(icon, NULL);
+	}
+
+	SDL_WM_SetCaption("Jump'n'Bump","");
+
 	flags = SDL_SWSURFACE;
 	if (fullscreen)
 		flags |= SDL_FULLSCREEN;
@@ -229,15 +238,6 @@ open_screen()
 		SDL_ShowCursor(0);
 	else
 		SDL_ShowCursor(1);
-
-	SDL_WM_SetCaption("Jump'n'Bump","");
-
-	icon = load_xpm_from_array(jumpnbump_xpm);
-	if (icon == NULL) {
-	    printf("Couldn't load icon\n");
-	} else {
-	    SDL_WM_SetIcon(icon, NULL);
-	}
 
 	vinited = 1;
 

@@ -66,13 +66,13 @@
 
 #ifndef DATA_PATH
 #ifdef __APPLE__
-#define	DATA_PATH "data/jumpbump.dat"
-#elif _WIN32 || _WIN64
-#define	DATA_PATH "data\\jumpbump.dat"
+#define	DATA_PATH "data/jnb.dat"
+#elif defined _WIN32 || defined _WIN64
+#define	DATA_PATH "data\\jnb.dat"
 #else
-#define	DATA_PATH "%%PREFIX%%/share/jumpnbump/jumpbump.dat"
-#endif
-#endif
+#define	DATA_PATH "%%PREFIX%%/share/jnb/jnb.dat"
+#endif /* platform */
+#endif /* DATA_PATH */
 
 struct main_info_t
 {

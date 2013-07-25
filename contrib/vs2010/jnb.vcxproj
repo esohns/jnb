@@ -35,10 +35,7 @@
     <ClCompile Include="..\..\sdl\sfx.c" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\jumpnbump.ico" />
-    <None Include="..\..\sdl\jumpnbump128.xpm" />
-    <None Include="..\..\sdl\jumpnbump32.xpm" />
-    <None Include="..\..\sdl\jumpnbump64.xpm" />
+    <None Include="..\..\jnb.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}</ProjectGuid>
@@ -126,6 +123,7 @@
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAs>CompileAsC</CompileAs>
       <ErrorReporting>None</ErrorReporting>
+      <BrowseInformation>true</BrowseInformation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

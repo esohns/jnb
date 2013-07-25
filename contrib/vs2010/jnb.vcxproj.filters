@@ -79,16 +79,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\sdl\jumpnbump32.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\sdl\jumpnbump64.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\sdl\jumpnbump128.xpm">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\..\jumpnbump.ico">
+    <None Include="..\..\jnb.ico">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

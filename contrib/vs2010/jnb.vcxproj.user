@@ -3,6 +3,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LocalDebuggerCommandArguments>-dat data\jumpnbump.dat -scaleup</LocalDebuggerCommandArguments>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerEnvironment>Path=C:\Temp\SDL-1.2.15\lib\x86;C:\Temp\SDL_mixer-1.2.12\lib\x86;C:\Temp\SDL_net-1.2.8\lib\x86;C:\Temp\zlib128-dll
+$(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..</LocalDebuggerWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LocalDebuggerCommandArguments>
