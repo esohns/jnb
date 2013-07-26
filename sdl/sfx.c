@@ -388,7 +388,7 @@ dj_play_sfx(unsigned char sfx_num, unsigned short freq, char volume, char pannin
 		slot = channel;
 
 	SDL_LockAudio();
-	addsfx((short *)sounds[sfx_num].buf, sounds[sfx_num].length, sounds[sfx_num].loop, freq, slot);
+	addsfx((short*)sounds[sfx_num].buf, sounds[sfx_num].length, sounds[sfx_num].loop, freq, slot);
 	updateSoundParams(slot, volume*2);
 	SDL_UnlockAudio();
 }

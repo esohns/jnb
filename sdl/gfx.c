@@ -151,7 +151,7 @@ load_xpm_from_array(char** xpm)
 
 	y = 0;
 	while (y < height) {
-		int *pixels;
+		int* pixels;
 
 		p = *xpm++;
 
@@ -357,9 +357,25 @@ set_pixel(int page, int x, int y, int color)
 }
 
 void
-flippage(int page)
+flip_pixels(unsigned char* pixels)
 {
 	int x,y;
+	unsigned char temp;
+
+	assert(pixels);
+	for (y = 0; y < JNB_HEIGHT; y++) {
+		for (x = 0; x < (352 / 2); x++) {
+			temp = pixels[y * JNB_WIDTH + x];
+			pixels[y * JNB_WIDTH + x] = pixels[y * JNB_WIDTH + (352 - x) - 1];
+			pixels[y * JNB_WIDTH + (352 - x) - 1] = temp;
+		}
+	}
+}
+
+void
+flippage(int page)
+{
+	int x, y;
 	unsigned char* src;
 	unsigned char* dest;
 

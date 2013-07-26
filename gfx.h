@@ -48,6 +48,7 @@ void open_screen(void);
 void wait_vrt(int mix);
 void draw_begin(void);
 void draw_end(void);
+void flip_pixels(unsigned char* pixels);
 void flippage(int page);
 void draw_begin(void);
 void draw_end(void);

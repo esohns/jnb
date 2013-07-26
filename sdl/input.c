@@ -41,6 +41,9 @@ struct mouse_t mouse;
 #define JOY_RIGHT(num) (num_joys>num && SDL_JoystickGetAxis(joys[num], 0)>3200)
 /* I find using the vertical axis to be annoying -- dnb */
 #define JOY_JUMP(num) (num_joys>num && SDL_JoystickGetButton(joys[num], 0))
+/* *TODO* given the statement above, use a button instead ? */
+#define JOY_ACK(num) (num_joys>num && SDL_JoystickGetButton(joys[num], 1))
+/* #define JOY_ACK(num) (num_joys>num && SDL_JoystickGetAxis(joys[num], 1)>3200) */
 
 #ifdef USE_KAILLERA
 #include "SDL_thread.h"
@@ -63,6 +66,7 @@ SDL_sem *game_start_sem = NULL;
 
 /* keys supported on my end */
 int my_player_up = -1;
+int my_player_down = 1;
 int my_player_left = -1;
 int my_player_right = 1;
 
@@ -70,26 +74,30 @@ int my_player_right = 1;
 static char kaillera_app_name[] = "Jump 'n Bump";
 static char kaillera_game_name[] = "Jump 'n Bump\0\0";
 
-static int player_keys[4][3] = {
+static int player_keys[4][4] = {
 	{
 		KEY_PL1_LEFT,
 		KEY_PL1_RIGHT,
-		KEY_PL1_JUMP
+		KEY_PL1_JUMP,
+		KEY_PL1_ACK
 	},                        
 	{
 		KEY_PL2_LEFT,
 		KEY_PL2_RIGHT,
-		KEY_PL2_JUMP
+		KEY_PL2_JUMP,
+		KEY_PL2_ACK
 	},
 	{
 		KEY_PL3_LEFT,
 		KEY_PL3_RIGHT,
-		KEY_PL3_JUMP
+		KEY_PL3_JUMP,
+		KEY_PL3_ACK
 	},
 	{
 		KEY_PL4_LEFT,
 		KEY_PL4_RIGHT,
-		KEY_PL4_JUMP
+		KEY_PL4_JUMP,
+		KEY_PL4_ACK
 	}
 };
 
@@ -116,6 +124,7 @@ kaillera_game_callback(char *game, int player, int numplayers)
 	my_player_up = player_keys[player-1][0] & 0xff;
 	my_player_left = player_keys[player-1][1] & 0xff;
 	my_player_right = player_keys[player-1][2] & 0xff;
+	my_player_down = player_keys[player-1][3] & 0xff;
 
 	/* initialize randomizer agreed by all players */
 	random[0] = time(0) & 0xff;
@@ -215,21 +224,23 @@ pack_keys(void)
 	int rv;
 
 	rv = local_keyb[my_player_up];
-	rv |= local_keyb[my_player_left] << 1;
-	rv |= local_keyb[my_player_right] << 2;
-	rv |= local_keyb[1] << 3;
+	rv |= local_keyb[my_player_down] << 1;
+	rv |= local_keyb[my_player_left] << 2;
+	rv |= local_keyb[my_player_right] << 3;
+	rv |= local_keyb[1] << 4;
 	return rv;
 }
 
 void
 unpack_keys(int player, char value)
 {
-	keyb[player_keys[player][0] & 0xff] = (value >> 0) & 1;
-	keyb[player_keys[player][1] & 0xff] = (value >> 1) & 1;
-	keyb[player_keys[player][2] & 0xff] = (value >> 2) & 1;
+	keyb[player_keys[player][2] & 0xff] = (value >> 0) & 1;
+	keyb[player_keys[player][3] & 0xff] = (value >> 1) & 1;
+	keyb[player_keys[player][0] & 0xff] = (value >> 2) & 1;
+	keyb[player_keys[player][1] & 0xff] = (value >> 3) & 1;
 
 	/* escape key is shared among all users */
-	keyb[1] |= (value >> 3) & 1;
+	keyb[1] |= (value >> 4) & 1;
 }
 
 int
@@ -282,7 +293,7 @@ key_pressed(int key)
 		return 1;
 	}
 
-	return keyb[(unsigned char) key];
+	return keyb[(unsigned char)key];
 }
 #else /* USE_KAILLERA */
 int
@@ -309,7 +320,7 @@ int
 hook_keyb_handler(void)
 {
 	SDL_EnableUNICODE(1);
-	memset((void *) last_keys, 0, sizeof(last_keys));
+	memset((void*)last_keys, 0, sizeof(last_keys));
 
 	return 0;
 }
@@ -342,6 +353,9 @@ update_player_actions(void)
 		tmp = (key_pressed(KEY_PL1_JUMP) == 1) || JOY_JUMP(3);
 		if (tmp != player[0].action_up)
 			tellServerPlayerMoved(0, MOVEMENT_UP, tmp);
+		tmp = (key_pressed(KEY_PL1_ACK) == 1) || JOY_ACK(3);
+		if (tmp != player[0].action_down)
+			tellServerPlayerMoved(0, MOVEMENT_DOWN, tmp);
 
 		tmp = (key_pressed(KEY_PL2_LEFT) == 1) || JOY_LEFT(2);
 		if (tmp != player[1].action_left)
@@ -352,6 +366,9 @@ update_player_actions(void)
 		tmp = (key_pressed(KEY_PL2_JUMP) == 1) || JOY_JUMP(2);
 		if (tmp != player[1].action_up)
 			tellServerPlayerMoved(1, MOVEMENT_UP, tmp);
+		tmp = (key_pressed(KEY_PL2_ACK) == 1) || JOY_ACK(2);
+		if (tmp != player[1].action_down)
+			tellServerPlayerMoved(1, MOVEMENT_DOWN, tmp);
 
 		tmp = (key_pressed(KEY_PL3_LEFT) == 1) || JOY_LEFT(1);
 		if (tmp != player[2].action_left)
@@ -362,6 +379,9 @@ update_player_actions(void)
 		tmp = (key_pressed(KEY_PL3_JUMP) == 1) || JOY_JUMP(1);
 		if (tmp != player[2].action_up)
 			tellServerPlayerMoved(2, MOVEMENT_UP, tmp);
+		tmp = (key_pressed(KEY_PL3_ACK) == 1) || JOY_ACK(1);
+		if (tmp != player[2].action_down)
+			tellServerPlayerMoved(2, MOVEMENT_DOWN, tmp);
 
 		tmp = (key_pressed(KEY_PL4_LEFT) == 1) || JOY_LEFT(0);
 		if (tmp != player[3].action_left)
@@ -372,6 +392,9 @@ update_player_actions(void)
 		tmp = (key_pressed(KEY_PL4_JUMP) == 1) || JOY_JUMP(0);
 		if (tmp != player[3].action_up)
 		tellServerPlayerMoved(3, MOVEMENT_UP, tmp);
+		tmp = (key_pressed(KEY_PL4_ACK) == 1) || JOY_ACK(0);
+		if (tmp != player[3].action_down)
+			tellServerPlayerMoved(3, MOVEMENT_DOWN, tmp);
 	} else {
 		tmp = (key_pressed(KEY_PL1_LEFT) == 1) || JOY_LEFT(0);
 		if (tmp != player[client_player_num].action_left)
@@ -382,6 +405,9 @@ update_player_actions(void)
 		tmp = (key_pressed(KEY_PL1_JUMP) == 1) || JOY_JUMP(0);
 		if (tmp != player[client_player_num].action_up)
 			tellServerPlayerMoved(client_player_num, MOVEMENT_UP, tmp);
+		tmp = (key_pressed(KEY_PL1_ACK) == 1) || JOY_ACK(0);
+		if (tmp != player[client_player_num].action_down)
+			tellServerPlayerMoved(client_player_num, MOVEMENT_DOWN, tmp);
 	}
 }
 

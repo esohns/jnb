@@ -48,6 +48,7 @@ struct NetPacket
 #define NETCMD_POSITION   (0xF00DF00D + 6)
 #define NETCMD_ALIVE      (0xF00DF00D + 7)
 #define NETCMD_KILL       (0xF00DF00D + 8)
+#define NETCMD_ACK2       (0xF00DF00D + 9)
 
 void tellServerPlayerMoved(int,  // player id
                            int,  // movement type
@@ -79,7 +80,8 @@ void serverTellEveryoneGoodbye();
 int update_players_from_server();
 void serverSendAlive(int); // player id
 void serverSendKillPacket(int,  // killer
-                          int); // victim
+                          int,  // victim
+													int); // is_ack
 void update_players_from_clients();
 void init_server(const char*); // netarg
 void connect_to_server(char*); // netarg

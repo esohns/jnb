@@ -26,11 +26,18 @@
 #ifndef __GLOBALS_H
 #define __GLOBALS_H
 
+#ifdef USE_SDL
+#include "SDL.h"
+#endif /* USE_SDL */
+
 //#ifdef __cplusplus
 //extern "C" {
 //#endif
 
 #define JNB_MAX_PLAYERS 4
+
+#define JNB_ACK_PERIOD 10000 /* ms */
+#define JNB_EVT_ACK_EXP 0
 
 #define JNB_INETPORT	11111
 
@@ -94,8 +101,8 @@ struct main_info_t
 
 struct player_t
 {
-  int action_left, action_up, action_right;
-	int enabled, dead_flag;
+  int action_left, action_up, action_right, action_down;
+	int enabled, ack_flag, dead_flag;
 	int bumps;
 	int bumped[JNB_MAX_PLAYERS];
 	int x, y;
@@ -181,6 +188,9 @@ void deinit_program();
 unsigned short rnd(unsigned short); // max
 int read_level();
 void write_calib_data();
+#ifdef USE_SDL
+Uint32 expire_ack_cb(Uint32 interval, void* parameter);
+#endif /* USE_SDL */
 
 //#ifdef __cplusplus
 //}

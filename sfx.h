@@ -35,11 +35,13 @@
 #define DJ_SFX_TYPE_WAV 1
 #define DJ_SFX_TYPE_SMP 2
 
-#define MAX_CHANNELS	32
+#define SFX_CHANNEL_FLIES 4
+#define MAX_CHANNELS 32
+
 #define SAMPLECOUNT 512
 
 #define SFX_JUMP   0
-#define SFX_LAND   1
+#define SFX_ACK    1
 #define SFX_DEATH  2
 #define SFX_SPRING 3
 #define SFX_SPLASH 4
@@ -47,7 +49,7 @@
 #define NUM_SFX	6
 
 #define SFX_JUMP_FREQ   15000
-#define SFX_LAND_FREQ   15000
+#define SFX_ACK_FREQ    25000
 #define SFX_DEATH_FREQ  20000
 #define SFX_SPRING_FREQ 15000
 #define SFX_SPLASH_FREQ 12000

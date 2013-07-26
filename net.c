@@ -223,6 +223,8 @@ processMovePacket(struct NetPacket* pkt)
 		player[playerid].action_right = newval;
 	} else if (movetype == MOVEMENT_UP) {
 		player[playerid].action_up = newval;
+	} else if (movetype == MOVEMENT_DOWN) {
+		player[playerid].action_down = newval;
 	} else {
 		printf("bogus MOVE packet!\n");
 	}
@@ -279,14 +281,15 @@ processKillPacket(struct NetPacket* pkt)
 	int x = pkt->arg3;
 	int y = pkt->arg4;
 	int c4 = 0;
-	int s1 = 0;
+	int s1 = (pkt->cmd == NETCMD_KILL);
 
 	player[c1].y_add = -player[c1].y_add;
 	if (player[c1].y_add > -262144L)
 		player[c1].y_add = -262144L;
 	player[c1].jump_abort = 1;
-	player[c2].dead_flag = 1;
-	if (player[c2].anim != 6) {
+
+	player[c2].dead_flag = s1;
+	if (player[c2].dead_flag == 1) {
 		player[c2].anim = 6;
 		player[c2].frame = 0;
 		player[c2].frame_tick = 0;
@@ -311,6 +314,18 @@ processKillPacket(struct NetPacket* pkt)
 		add_leftovers(1, 360, 34 + c1 * 64, s1 / 10, &number_gobs);
 		add_leftovers(0, 376, 34 + c1 * 64, s1 - (s1 / 10) * 10, &number_gobs);
 		add_leftovers(1, 376, 34 + c1 * 64, s1 - (s1 / 10) * 10, &number_gobs);
+	} else {
+		SDL_TimerID timer;
+		if (player[c1].ack_flag == 0) {
+			dj_play_sfx(SFX_ACK, (unsigned short)(SFX_ACK_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+			player[c1].ack_flag = 1;
+			timer = SDL_AddTimer(JNB_ACK_PERIOD, expire_ack_cb, &player[c1]);
+		}
+		if (player[c2].ack_flag == 0) {
+			dj_play_sfx(SFX_ACK, (unsigned short)(SFX_ACK_FREQ + rnd(2000) - 1000), 64, 0, 0, -1);
+			player[c2].ack_flag = 1;
+			timer = SDL_AddTimer(JNB_ACK_PERIOD, expire_ack_cb, &player[c2]);
+		}
 	}
 }
 
@@ -412,12 +427,12 @@ serverSendAlive(int playerid)
 #endif /* USE_NET */
 
 void
-serverSendKillPacket(int killer, int victim)
+serverSendKillPacket(int killer, int victim, int is_ack)
 {
 	struct NetPacket pkt;
 
 	assert(is_server);
-	pkt.cmd = NETCMD_KILL;
+	pkt.cmd = (is_ack == 1 ? NETCMD_ACK2 : NETCMD_KILL);
 	pkt.arg = killer;
 	pkt.arg2 = victim;
 	pkt.arg3 = player[victim].x;

@@ -89,7 +89,7 @@ struct player_anim_t player_anims[7];
 struct object_t objects[NUM_OBJECTS];
 struct object_anim_t object_anims[8] = {
 	{
-		6, 0, {
+		6, 0, { /* spring */
 			{
 			0, 3}, {
 			1, 3}, {
@@ -103,7 +103,7 @@ struct object_anim_t object_anims[8] = {
 			0, 0}
 		}
 	}, {
-		9, 0, {
+		9, 0, { /* splash */
 			{
 			6, 2}, {
 			7, 2}, {
@@ -117,7 +117,7 @@ struct object_anim_t object_anims[8] = {
 			0, 0}
 		}
 	}, {
-		5, 0, {
+		5, 0, { /* dust */
 			{
 			15, 3}, {
 			16, 3}, {
@@ -131,7 +131,7 @@ struct object_anim_t object_anims[8] = {
 			0, 0}
 		}
 	}, {
-		10, 0, {
+		10, 0, { /* butterflies 1&2 (right) */
 			{
 			20, 2}, {
 			21, 2}, {
@@ -145,7 +145,7 @@ struct object_anim_t object_anims[8] = {
 			21, 2}
 		}
 	}, {
-		10, 0, {
+		10, 0, { /* butterflies 1&2 (left) */
 			{
 			26, 2}, {
 			27, 2}, {
@@ -159,7 +159,7 @@ struct object_anim_t object_anims[8] = {
 			27, 2}
 		}
 	}, {
-		10, 0, {
+		10, 0, { /* butterflies 3&4 (right) */
 			{
 			32, 2}, {
 			33, 2}, {
@@ -173,7 +173,7 @@ struct object_anim_t object_anims[8] = {
 			33, 2}
 		}
 	}, {
-		10, 0, {
+		10, 0, { /* butterflies 3&4 (left) */
 			{
 			38, 2}, {
 			39, 2}, {
@@ -187,7 +187,7 @@ struct object_anim_t object_anims[8] = {
 			39, 2}
 		}
 	}, {
-		4, 0, {
+		4, 0, { /* blood 'n gore */
 			{
 			76, 4}, {
 			77, 4}, {
@@ -229,7 +229,7 @@ struct leftovers_t {
 
 int pogostick, bunnies_in_space, jetpack, lord_of_the_flies, blood_is_thicker_than_water;
 
-#ifndef _MSC_VER
+#if !defined _WIN32 && !defined _WIN64
 int
 filelength(int handle)
 {
@@ -242,23 +242,7 @@ filelength(int handle)
 
 	return buf.st_size;
 }
-#endif
-
-void
-flip_pixels(unsigned char* pixels)
-{
-	int x,y;
-	unsigned char temp;
-
-	assert(pixels);
-	for (y = 0; y < JNB_HEIGHT; y++) {
-		for (x = 0; x < (352 / 2); x++) {
-			temp = pixels[y * JNB_WIDTH + x];
-			pixels[y * JNB_WIDTH + x] = pixels[y * JNB_WIDTH + (352 - x) - 1];
-			pixels[y * JNB_WIDTH + (352 - x) - 1] = temp;
-		}
-	}
-}
+#endif /* platform */
 
 void
 get_closest_player_to_point(int x, int y, int* dist, int* closest_player)
@@ -266,7 +250,8 @@ get_closest_player_to_point(int x, int y, int* dist, int* closest_player)
 	int c1;
 	int cur_dist = 0;
 
-	*dist = 0x7fff;
+	*dist = INT_MAX;
+	*closest_player = -1;
 	for (c1 = 0; c1 < JNB_MAX_PLAYERS; c1++) {
 		if (player[c1].enabled == 1) {
 			cur_dist = (int)sqrt((x - ((player[c1].x >> 16) + 8)) * (x - ((player[c1].x >> 16) + 8)) + (y - ((player[c1].y >> 16) + 8)) * (y - ((player[c1].y >> 16) + 8)));
@@ -301,7 +286,7 @@ update_flies(int update_count)
 		s3 = 32 - dist / 3;
 		if (s3 < 0)
 			s3 = 0;
-		dj_set_sfx_channel_volume(4, (char)(s3));
+		dj_set_sfx_channel_volume(SFX_CHANNEL_FLIES, (char)(s3));
 	}
 
 	for (c1 = 0; c1 < NUM_FLIES; c1++) {
@@ -365,14 +350,15 @@ update_flies(int update_count)
 }
 
 void
-player_kill(int c1, int c2)
+player_kill(int c1, int c2, int is_ack)
 {
 	if (player[c1].y_add >= 0) {
 		if (is_server)
-			serverSendKillPacket(c1, c2);
-	} else {
-		if (player[c2].y_add < 0)
-			player[c2].y_add = 0;
+			serverSendKillPacket(c1, c2, is_ack);
+		else {
+			if (player[c2].y_add < 0)
+				player[c2].y_add = 0;
+		}
 	}
 }
 
@@ -425,37 +411,19 @@ check_cheats()
 void
 collision_check()
 {
-	int c1 = 0, c2 = 0, c3 = 0;
+	int c1 = 0, c2 = 0;
 	int l1;
 
 	/* collision check */
-	for (c3 = 0; c3 < 6; c3++) {
-		if (c3 == 0) {
-			c1 = 0;
-			c2 = 1;
-		} else if (c3 == 1) {
-			c1 = 0;
-			c2 = 2;
-		} else if (c3 == 2) {
-			c1 = 0;
-			c2 = 3;
-		} else if (c3 == 3) {
-			c1 = 1;
-			c2 = 2;
-		} else if (c3 == 4) {
-			c1 = 1;
-			c2 = 3;
-		} else if (c3 == 5) {
-			c1 = 2;
-			c2 = 3;
-		}
+	for (c1 = 0; c1 <= JNB_MAX_PLAYERS-2; c1++)
+	for (c2 = c1+1; c2 <= JNB_MAX_PLAYERS-1; c2++) {
 		if (player[c1].enabled == 1 && player[c2].enabled == 1) {
 			if (labs(player[c1].x - player[c2].x) < (12L << 16) && labs(player[c1].y - player[c2].y) < (12L << 16)) {
 				if ((labs(player[c1].y - player[c2].y) >> 16) > 5) {
 					if (player[c1].y < player[c2].y) {
-						player_kill(c1,c2);
+						player_kill(c1,c2,player[c2].action_down);
 					} else {
-						player_kill(c2,c1);
+						player_kill(c2,c1,player[c1].action_down);
 					}
 				} else {
 					if (player[c1].x < player[c2].x) {
@@ -531,7 +499,7 @@ game_loop()
 				}
 #endif
 				end_loop_flag = 1;
-				memset(pal, 0, 768);
+				memset(pal, 0, 768*sizeof(char));
 				mod_fade_direction = 0;
 			}
 
@@ -665,9 +633,9 @@ game_loop()
 		if (is_net) {
 			if ( (player[client_player_num].dead_flag == 0) &&
 			(
-				 (player[client_player_num].action_left) ||
+				 (player[client_player_num].action_left)  ||
 				 (player[client_player_num].action_right) ||
-				 (player[client_player_num].action_up) ||
+				 (player[client_player_num].action_up)    ||
 				 (player[client_player_num].jump_ready == 0)
 			) ) {
 				tellServerNewPosition();
@@ -1073,7 +1041,7 @@ cpu_move()
 			else if (tar_posx - cur_posx < 4 + 8 && tar_posx - cur_posx > -4)
 			{      // makes the bunnies less "nervous"
 				lm = 0;
-				lm = 0;
+				rm = 0;
 			}
 
 			/* Y-axis movement */
@@ -1247,7 +1215,10 @@ steer_players()
 					below_left = GET_BAN_MAP_XY(s1, s2 + 16);
 					below = GET_BAN_MAP_XY(s1 + 8, s2 + 16);
 					below_right = GET_BAN_MAP_XY(s1 + 15, s2 + 16);
-					if (below == BAN_SOLID || below == BAN_SPRING || (((below_left == BAN_SOLID || below_left == BAN_SPRING) && below_right != BAN_ICE) || (below_left != BAN_ICE && (below_right == BAN_SOLID || below_right == BAN_SPRING)))) {
+					if (below == BAN_SOLID || 
+						  below == BAN_SPRING ||
+							(((below_left == BAN_SOLID || below_left == BAN_SPRING) && below_right != BAN_ICE) ||
+							  (below_left != BAN_ICE && (below_right == BAN_SOLID || below_right == BAN_SPRING)))) {
 						if (player[c1].x_add < 0) {
 							player[c1].x_add += 16384;
 							if (player[c1].x_add > 0)
@@ -1276,7 +1247,7 @@ steer_players()
 							s2 = -16;
 						/* jump */
 						if (GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY(s1, (s2 + 16)) == BAN_ICE || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_SOLID || GET_BAN_MAP_XY((s1 + 15), (s2 + 16)) == BAN_ICE) {
-							player[c1].y_add = -280000L;
+							player[c1].y_add = (player[c1].ack_flag == 0 ? -280000L : -320000L);
 							player[c1].anim = 2;
 							player[c1].frame = 0;
 							player[c1].frame_tick = 0;
@@ -1484,6 +1455,7 @@ steer_players()
 				}
 			}
 
+			/* animation */
 			player[c1].frame_tick++;
 			if (player[c1].frame_tick >= player_anims[player[c1].anim].frame[player[c1].frame].ticks) {
 				player[c1].frame++;
@@ -2361,6 +2333,15 @@ all provided the user didn't choose one on the commandline. */
 			return 1;
 		}
 
+		if ((handle = dat_open("ack.smp")) == 0) {
+			strcpy(main_info.error_str, "Error loading 'ack.smp', aborting...\n");
+			return 1;
+		}
+		if (dj_load_sfx(handle, 0, dat_filelen("ack.smp"), DJ_SFX_TYPE_SMP, SFX_ACK) != 0) {
+			strcpy(main_info.error_str, "Error loading 'ack.smp', aborting...\n");
+			return 1;
+		}
+
 		if ((handle = dat_open("death.smp")) == 0) {
 			strcpy(main_info.error_str, "Error loading 'death.smp', aborting...\n");
 			return 1;
@@ -2640,4 +2621,23 @@ write_calib_data()
 	if ((handle = fopen(datfile_name, "wb")) == NULL)	return;
 	fwrite(mem, 1, len, handle);
 	fclose(handle);
+}
+
+Uint32
+expire_ack_cb(Uint32 interval, void* parameter)
+{
+   SDL_Event sdl_event;
+   SDL_UserEvent userevent;
+ 
+   userevent.type = SDL_USEREVENT;
+   userevent.code = JNB_EVT_ACK_EXP;
+   userevent.data1 = parameter;
+   userevent.data2 = NULL;
+ 
+   sdl_event.type = SDL_USEREVENT;
+   sdl_event.user = userevent;
+ 
+   SDL_PushEvent(&sdl_event);
+
+   return 0;
 }

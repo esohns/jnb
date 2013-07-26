@@ -49,6 +49,7 @@ intr_sysupdate()
 
 	while (SDL_PollEvent(&e)) {
 		switch (e.type) {
+		/* *TODO* map KEY_PLx_ACK function to mouse controller(s)... */
 		case SDL_MOUSEBUTTONDOWN:
 		case SDL_MOUSEBUTTONUP:
 			if(e.button.state == SDL_PRESSED &&
@@ -113,36 +114,40 @@ intr_sysupdate()
 					ai[0] = !ai[0];
 
 				/* Release keys, otherwise it will continue moving that way */
-				addkey((KEY_PL1_LEFT & 0x7f) | 0x8000);
+				addkey((KEY_PL1_LEFT  & 0x7f) | 0x8000);
 				addkey((KEY_PL1_RIGHT & 0x7f) | 0x8000);
-				addkey((KEY_PL1_JUMP & 0x7f) | 0x8000);
+				addkey((KEY_PL1_JUMP  & 0x7f) | 0x8000);
+				addkey((KEY_PL1_ACK   & 0x7f) | 0x8000);
 				break;
 			case SDLK_2:
 				if (e.type == SDL_KEYUP)
 					ai[1] = !ai[1];
 
 				/* Release keys, otherwise it will continue moving that way */
-				addkey((KEY_PL2_LEFT & 0x7f) | 0x8000);
+				addkey((KEY_PL2_LEFT  & 0x7f) | 0x8000);
 				addkey((KEY_PL2_RIGHT & 0x7f) | 0x8000);
-				addkey((KEY_PL2_JUMP & 0x7f) | 0x8000);
+				addkey((KEY_PL2_JUMP  & 0x7f) | 0x8000);
+				addkey((KEY_PL2_ACK   & 0x7f) | 0x8000);
 				break;
 			case SDLK_3:
 				if (e.type == SDL_KEYUP)
 					ai[2] = !ai[2];
 
 				/* Release keys, otherwise it will continue moving that way */
-				addkey((KEY_PL3_LEFT & 0x7f) | 0x8000);
+				addkey((KEY_PL3_LEFT  & 0x7f) | 0x8000);
 				addkey((KEY_PL3_RIGHT & 0x7f) | 0x8000);
-				addkey((KEY_PL3_JUMP & 0x7f) | 0x8000);
+				addkey((KEY_PL3_JUMP  & 0x7f) | 0x8000);
+				addkey((KEY_PL3_ACK   & 0x7f) | 0x8000);
 				break;
 			case SDLK_4:
 				if (e.type == SDL_KEYUP)
 					ai[3] = !ai[3];
 
 				/* Release keys, otherwise it will continue moving that way */
-				addkey((KEY_PL4_LEFT & 0x7f) | 0x8000);
+				addkey((KEY_PL4_LEFT  & 0x7f) | 0x8000);
 				addkey((KEY_PL4_RIGHT & 0x7f) | 0x8000);
-				addkey((KEY_PL4_JUMP & 0x7f) | 0x8000);
+				addkey((KEY_PL4_JUMP  & 0x7f) | 0x8000);
+				addkey((KEY_PL4_ACK   & 0x7f) | 0x8000);
 				break;
 			case SDLK_ESCAPE:
 				if (e.type == SDL_KEYUP)
@@ -156,6 +161,15 @@ intr_sysupdate()
 					e.key.keysym.sym |= 0x8000;
 				addkey(e.key.keysym.sym);
 
+				break;
+			}
+			break;
+		case SDL_USEREVENT:
+			switch (e.user.code) {
+			case JNB_EVT_ACK_EXP:
+				(*(struct player_t*)e.user.data1).ack_flag = 0;
+				break;
+			default:
 				break;
 			}
 			break;

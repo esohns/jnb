@@ -108,6 +108,11 @@ menu()
 	addkey((KEY_PL3_JUMP & 0x7f) | 0x8000);
 	addkey((KEY_PL4_JUMP & 0x7f) | 0x8000);
 
+	addkey((KEY_PL1_ACK & 0x7f) | 0x8000);
+	addkey((KEY_PL2_ACK & 0x7f) | 0x8000);
+	addkey((KEY_PL3_ACK & 0x7f) | 0x8000);
+	addkey((KEY_PL4_ACK & 0x7f) | 0x8000);
+
 	mod_vol = 0;
 	mod_fade_direction = 1;
 	dj_ready_mod(MOD_MENU);
@@ -432,7 +437,7 @@ menu()
 					if ((player[c1].x >> 16) > JNB_WIDTH) {
 						end_loop_flag = 1;
 						new_game_flag = 1;
-						memset(menu_pal, 0, 768);
+						memset(menu_pal, 0, 768*sizeof(char));
 						mod_fade_direction = 0;
 					}
 					if ((player[c1].y >> 16) > (138 + c1 * 2)) {
@@ -460,7 +465,7 @@ menu()
 
 			main_info.page_info[main_info.draw_page].num_pobs = 0;
 
-			for (c1 = 3; c1 >= 0; c1--)
+			for (c1 = JNB_MAX_PLAYERS-1; c1 >= 0; c1--)
 				add_pob(main_info.draw_page, player[c1].x >> 16, player[c1].y >> 16, player[c1].image + c1 * 18, &rabbit_gobs);
 
 			update_objects();
@@ -605,7 +610,7 @@ menu_init()
 		strcpy(main_info.error_str, "Error loading 'menumask.pcx', aborting...\n");
 		return 1;
 	}
-	memset(menu_cur_pal, 0, 768);
+	memset(menu_cur_pal, 0, 768*sizeof(char));
 
 	/* fix dark font */
 	for (c1 = 0; c1 < 16; c1++) {
