@@ -11,31 +11,35 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\config.h" />
-    <ClInclude Include="..\..\dat.h" />
-    <ClInclude Include="..\..\filter.h" />
-    <ClInclude Include="..\..\gfx.h" />
-    <ClInclude Include="..\..\globals.h" />
-    <ClInclude Include="..\..\input.h" />
-    <ClInclude Include="..\..\interrpt.h" />
-    <ClInclude Include="..\..\menu.h" />
-    <ClInclude Include="..\..\net.h" />
-    <ClInclude Include="..\..\sfx.h" />
+    <ClInclude Include="..\..\src\config.h" />
+    <ClInclude Include="..\..\src\dat.h" />
+    <ClInclude Include="..\..\src\filter.h" />
+    <ClInclude Include="..\..\src\gfx.h" />
+    <ClInclude Include="..\..\src\globals.h" />
+    <ClInclude Include="..\..\src\input.h" />
+    <ClInclude Include="..\..\src\interrpt.h" />
+    <ClInclude Include="..\..\src\menu.h" />
+    <ClInclude Include="..\..\src\net.h" />
+    <ClInclude Include="..\..\src\sfx.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\dat.c" />
-    <ClCompile Include="..\..\filter.c" />
-    <ClCompile Include="..\..\fireworks.c" />
-    <ClCompile Include="..\..\main.c" />
-    <ClCompile Include="..\..\menu.c" />
-    <ClCompile Include="..\..\net.c" />
-    <ClCompile Include="..\..\sdl\gfx.c" />
-    <ClCompile Include="..\..\sdl\input.c" />
-    <ClCompile Include="..\..\sdl\interrpt.c" />
-    <ClCompile Include="..\..\sdl\sfx.c" />
+    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\jnb.ico" />
+    <ClCompile Include="..\..\src\dat.c" />
+    <ClCompile Include="..\..\src\filter.c" />
+    <ClCompile Include="..\..\src\fireworks.c" />
+    <ClCompile Include="..\..\src\main.c" />
+    <ClCompile Include="..\..\src\menu.c" />
+    <ClCompile Include="..\..\src\net.c" />
+    <ClCompile Include="..\..\src\sdl\gfx.c" />
+    <ClCompile Include="..\..\src\sdl\input.c" />
+    <ClCompile Include="..\..\src\sdl\interrpt.c" />
+    <ClCompile Include="..\..\src\sdl\sfx.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\data\assets\jnb.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{746BD22A-F8E9-4E2A-9DB1-74E9C3CD21CC}</ProjectGuid>
@@ -80,7 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>BZLIB_SUPPORT;ZLIB_SUPPORT;USE_NET;USE_SDL_MIXER;USE_SDL;WIN32;_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir)..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir)..\..\src;$(ProjectDir)..\..\data\assets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ShowIncludes>false</ShowIncludes>
       <CompileAs>CompileAsC</CompileAs>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -107,6 +111,9 @@
       <DataExecutionPrevention>false</DataExecutionPrevention>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
     </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\data\assets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -118,7 +125,7 @@
       </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BZLIB_SUPPORT;ZLIB_SUPPORT;USE_NET;USE_SDL_MIXER;USE_SDL;WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir)..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Temp\bzip2-1.0.6;C:\Temp\zlib128-dll\include;C:\Temp\SDL-1.2.15\include;C:\Temp\SDL_mixer-1.2.12\include;C:\Temp\SDL_ttf-2.0.11\include;C:\Temp\SDL_net-1.2.8\include;$(ProjectDir)..\..\src;$(ProjectDir)..\..\data\assets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <BufferSecurityCheck>true</BufferSecurityCheck>
       <CompileAs>CompileAsC</CompileAs>
@@ -134,6 +141,10 @@
       <AdditionalDependencies>SDLmain.lib;SDL.lib;SDL_mixer.lib;SDL_ttf.lib;SDL_net.lib;zdll.lib;libbz2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <LinkErrorReporting>NoErrorReport</LinkErrorReporting>
     </Link>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\data\assets;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ShowProgress>false</ShowProgress>
+    </ResourceCompile>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
