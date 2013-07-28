@@ -23,6 +23,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include <limits.h>
+
 #if defined _WIN32 || defined _WIN64
 #define WIN32_LEAN_AND_MEAN
 #elif DOS
@@ -34,20 +36,19 @@
 #include <unistd.h>
 #endif /* platform */
 
-#include "globals.h"
 #include "sfx.h"
+
+#include "globals.h"
 
 #include "dat.h"
 
-#ifndef NO_SDL_MIXER
 #ifdef USE_SDL
-#include "SDL.h"
-#ifdef USE_SDL_MIXER
-#include "SDL_mixer.h"
+#include <SDL.h>
+#if defined USE_SDL_MIXER && !defined NO_SDL_MIXER
+#include <SDL_mixer.h>
 Mix_Music* current_music = (Mix_Music*)NULL;
 #endif /* USE_SDL_MIXER */
 #endif /* USE_SDL */
-#endif /* NO_SDL_MIXER */
 
 struct sfx_data sounds[NUM_SFX];
 struct channel_info_t channelinfo[MAX_CHANNELS];
@@ -245,7 +246,9 @@ mix_sound(void* unused, Uint8* stream, int len)
 char
 dj_init(void)
 {
+#ifdef USE_SDL_MIXER
 	Uint16 audio_format = MIX_DEFAULT_FORMAT;
+#endif /* USE_SDL_MIXER */
 	int audio_channels = 2;
 	int audio_buffers = 4096;
   char* cmdline_player_cmd = NULL;
@@ -290,7 +293,7 @@ dj_deinit(void)
 	if (main_info.no_sound)
 		return;
 
-#ifndef NO_SDL_MIXER
+#ifndef USE_SDL_MIXER
 	Mix_HaltMusic();
 	if (current_music)
 		Mix_FreeMusic(current_music);
@@ -478,13 +481,13 @@ dj_free_sfx(unsigned char sfx_num)
 char
 dj_ready_mod(char mod_num)
 {
-#ifndef NO_SDL_MIXER
+#ifdef USE_SDL_MIXER
 	FILE* tmp;
-# if ((defined _MSC_VER) || (defined __MINGW32__))
+#if defined _WIN32 || defined _WIN64
 	char filename[] = "jnb.tmpmusic.mod";
-# else
+#else
 	char filename[] = "/tmp/jnb.tmpmusic.mod";
-# endif
+#endif /* platform */
 	unsigned char* fp;
 	int len;
 
@@ -538,7 +541,6 @@ dj_ready_mod(char mod_num)
 		fprintf(stderr, "Couldn't load music: %s\n", Mix_GetError());
 		return 0;
 	}
-
 #endif
 
 	return 0;
@@ -547,7 +549,7 @@ dj_ready_mod(char mod_num)
 char
 dj_start_mod(void)
 {
-#ifndef NO_SDL_MIXER
+#ifdef USE_SDL_MIXER
 	if (main_info.no_sound)
 		return 0;
 
@@ -561,7 +563,7 @@ dj_start_mod(void)
 void
 dj_stop_mod(void)
 {
-#ifndef NO_SDL_MIXER
+#ifdef USE_SDL_MIXER
 	if (main_info.no_sound)
 		return;
 
@@ -572,7 +574,7 @@ dj_stop_mod(void)
 void
 dj_set_mod_volume(char volume)
 {
-#ifndef NO_SDL_MIXER
+#ifdef USE_SDL_MIXER
 	if (main_info.no_sound)
 		return;
 

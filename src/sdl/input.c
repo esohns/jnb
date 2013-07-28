@@ -24,7 +24,7 @@
  */
 
 #ifdef USE_SDL
-#include "SDL.h"
+#include <SDL.h>
 #endif /* USE_SDL */
 
 #include "input.h"
@@ -46,8 +46,8 @@ struct mouse_t mouse;
 /* #define JOY_ACK(num) (num_joys>num && SDL_JoystickGetAxis(joys[num], 1)>3200) */
 
 #ifdef USE_KAILLERA
-#include "SDL_thread.h"
-#include "SDL_mutex.h"
+#include <SDL_thread.h>
+#include <SDL_mutex.h>
 #include <kailleraclient.h>
 
 char local_keyb[256];

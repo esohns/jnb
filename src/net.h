@@ -7,7 +7,7 @@
 //#endif
 
 #ifdef USE_SDL
-#include "SDL_net.h"
+#include <SDL_net.h>
 #endif /* USE_SDL */
 
 #include "globals.h"
@@ -90,4 +90,4 @@ void connect_to_server(char*); // netarg
 //}
 //#endif
 
-#endif
+#endif /* __NET_H */

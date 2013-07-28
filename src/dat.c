@@ -1,22 +1,21 @@
 
-#include "dat.h"
-
 #include <stdlib.h>
-#include <stdio.h>
-#include <io.h>
+#include <string.h>
 #include <fcntl.h>
 
-#define _CRT_SECURE_DEPRECATE_MEMORY
-#include <memory.h>
-#include <string.h>
+#if defined _WIN32 || defined _WIN64
+#include <io.h>
+#endif /* platform */
 
 #ifdef BZLIB_SUPPORT
-#include "bzlib.h"
+#include <bzlib.h>
 #endif
 
 #ifdef ZLIB_SUPPORT
-#include "zlib.h"
+#include <zlib.h>
 #endif
+
+#include "dat.h"
 
 void
 preread_datafile(const char* filename_in)

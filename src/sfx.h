@@ -173,4 +173,4 @@ void dj_free_mod(char mod_num);
 //}
 //#endif
 
-#endif
+#endif /* __SFX_H */

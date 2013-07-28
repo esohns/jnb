@@ -14,4 +14,4 @@ void menu_deinit();
 //}
 //#endif
 
-#endif
+#endif /* __MENU_H */

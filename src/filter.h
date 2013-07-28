@@ -26,9 +26,17 @@
 #ifndef __FILTER_H__
 #define __FILTER_H__
 
+//#ifdef __cplusplus
+//extern "C" {
+//#endif
+
 void do_scale2x(unsigned char *src,
 		int src_width,
 		int src_height,
 		unsigned char *dst);
 
-#endif // __FILTER_H__
+//#ifdef __cplusplus
+//}
+//#endif
+
+#endif /* __FILTER_H__ */

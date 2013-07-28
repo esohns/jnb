@@ -131,6 +131,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <ErrorReporting>None</ErrorReporting>
       <BrowseInformation>true</BrowseInformation>
+      <ShowIncludes>false</ShowIncludes>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

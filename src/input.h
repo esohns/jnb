@@ -73,4 +73,4 @@ int calib_joy(int);             // type
 //}
 //#endif
 
-#endif
+#endif /* __INPUT_H */

@@ -30,6 +30,10 @@
 //extern "C" {
 //#endif
 
-#define JNB_VERSION "1.51"
+#define JNB_VERSION "1.52"
 
-#endif
+//#ifdef __cplusplus
+//}
+//#endif
+
+#endif /* __CONFIG_H */

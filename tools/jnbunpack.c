@@ -26,8 +26,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <fcntl.h>
 #include <string.h>
+#include <fcntl.h>
 
 #if defined _WIN32 || defined _WIN64
 #define WIN32_LEAN_AND_MEAN

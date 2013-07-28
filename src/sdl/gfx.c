@@ -26,7 +26,7 @@
 #include <assert.h>
 
 #ifdef USE_SDL
-#include "SDL.h"
+#include <SDL.h>
 #endif /* USE_SDL */
 
 #include "gfx.h"

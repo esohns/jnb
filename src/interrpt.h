@@ -12,4 +12,4 @@ int intr_sysupdate();
 //}
 //#endif
 
-#endif
+#endif /* __INTERRPT_H */

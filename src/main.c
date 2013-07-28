@@ -49,22 +49,22 @@
 #endif /* platform */
 
 #ifdef ZLIB_SUPPORT
-#include "zlib.h"
+#include <zlib.h>
 #endif /* ZLIB_SUPPORT */
 
 #ifdef BZLIB_SUPPORT
-#include "bzlib.h"
+#include <bzlib.h>
 #endif /* BZLIB_SUPPORT */
 
 #ifdef USE_SDL
-#include "SDL.h"
+#include <SDL.h>
 //
 #ifdef USE_SDL_MIXER
-#include "SDL_mixer.h"
+#include <SDL_mixer.h>
 #endif /* USE_SDL_MIXER */
 //
 #ifdef USE_NET
-#include "SDL_net.h"
+#include <SDL_net.h>
 #endif /* USE_NET */
 #endif /* USE_SDL */
 

@@ -24,20 +24,14 @@
  */
 
 #ifdef USE_SDL
-#include "SDL.h"
+#include <SDL.h>
 #endif /* USE_SDL */
 
-#include "globals.h"
 #include "interrpt.h"
+
+#include "globals.h"
 #include "input.h"
 #include "gfx.h"
-
-//#include <stdio.h>
-//#include <time.h>
-//
-//#ifndef _MSC_VER
-//#include <unistd.h>
-//#endif
 
 int
 intr_sysupdate()

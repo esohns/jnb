@@ -27,7 +27,7 @@
 #define __GLOBALS_H
 
 #ifdef USE_SDL
-#include "SDL.h"
+#include <SDL.h>
 #endif /* USE_SDL */
 
 //#ifdef __cplusplus
@@ -196,4 +196,4 @@ Uint32 expire_ack_cb(Uint32 interval, void* parameter);
 //}
 //#endif
 
-#endif
+#endif /* __GLOBALS_H */

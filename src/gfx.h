@@ -88,4 +88,4 @@ void fs_toggle();
 //}
 //#endif
 
-#endif
+#endif /* __GFX_H */

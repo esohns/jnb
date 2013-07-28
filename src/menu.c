@@ -24,8 +24,10 @@
  */
 
 #ifdef USE_SDL
-#include "SDL.h"
+#include <SDL.h>
 #endif /* USE_SDL */
+
+#include "menu.h"
 
 #include "globals.h"
 #include "config.h"
@@ -36,7 +38,6 @@
 #include "interrpt.h"
 
 #include "dat.h"
-#include "menu.h"
 
 char* menu_background;
 
