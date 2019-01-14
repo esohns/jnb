@@ -129,7 +129,8 @@ preread_datafile(const char* filename_in)
   /* drop through and try for an uncompressed datafile... */
 #endif
 
-  fd = open(filename_in, O_RDONLY | O_BINARY);
+/*  fd = open(filename_in, O_RDONLY | O_BINARY);*/
+  fd = open(filename_in, O_RDONLY);
   if (fd == -1)
   {
     fprintf(stderr, "can't open %s:", filename_in);

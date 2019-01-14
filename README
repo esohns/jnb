@@ -37,6 +37,8 @@ esc/f12 exit
 For compilation you will need:
 do following on a debian gnu/linux system (www.debian.org)
 apt-get install libsdl-dev libsdl-mixer-dev
+*EDIT*: on fedora, do:
+dnf install SDL-devel SDL_mixer-devel SDL_net-devel
 sdl libraries are needed, you might find it at www.libsdl.org
 
 You can find more levels at http://www.jumpbump.mine.nu/cgi-bin/jb.sh

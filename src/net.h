@@ -2,9 +2,9 @@
 #ifndef __NET_H
 #define __NET_H
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+/*#ifdef __cplusplus
+extern "C" {
+#endif*/
 
 #ifdef USE_SDL
 #include <SDL_net.h>
@@ -50,44 +50,45 @@ struct NetPacket
 #define NETCMD_KILL       (0xF00DF00D + 8)
 #define NETCMD_ACK2       (0xF00DF00D + 9)
 
-void tellServerPlayerMoved(int,  // player id
-                           int,  // movement type
-                           int); // new value
-void bufToPacket(const char*,         // buffer
-                 struct NetPacket*);  // packet
-void packetToBuf(const struct NetPacket*, // packet
-                 char*);                  // buffer
-void sendPacketToSock(TCPsocket,          // socket
-                      struct NetPacket*); // packet
-void sendPacket(int,                // player id
-                struct NetPacket*); // packet
-void sendPacketToAll(struct NetPacket*); // packet
-int grabPacket(TCPsocket,          // socket
-               SDLNet_SocketSet,   // socket
-               struct NetPacket*); // packet
-int serverRecvPacket(struct NetPacket*); // packet
+void tellServerPlayerMoved(int,  /* player id */
+                           int,  /* movement type */
+                           int); /* new value */
+void bufToPacket(const char*,         /* buffer */
+                 struct NetPacket*);  /* packet */
+void packetToBuf(const struct NetPacket*, /* packet */
+                 char*);                  /* buffer */
+void sendPacketToSock(TCPsocket,          /* socket */
+                      struct NetPacket*); /* packet */
+void sendPacket(int,                /* player id */
+                struct NetPacket*); /* packet */
+void sendPacketToAll(struct NetPacket*); /* packet */
+int grabPacket(TCPsocket,          /* socket */
+               SDLNet_SocketSet,   /* socket */
+               struct NetPacket*); /* packet */
+int serverRecvPacket(struct NetPacket*); /* packet */
 void wait_for_greenlight();
 void tellServerGoodbye();
-void processMovePacket(struct NetPacket*); // packet
-void tellServerPlayerMoved(int,  // player id
-                           int,  // movement type
-                           int); // newval
+void processMovePacket(struct NetPacket*); /* packet */
+void tellServerPlayerMoved(int,  /* player id */
+                           int,  /* movement type */
+                           int); /* newval */
 void tellServerNewPosition();
-void processKillPacket(struct NetPacket*); // packet
-void processPositionPacket(struct NetPacket*); // packet
-void processAlivePacket(struct NetPacket*); // packet
+void processKillPacket(struct NetPacket*); /* packet */
+void processPositionPacket(struct NetPacket*); /* packet */
+void processAlivePacket(struct NetPacket*); /* packet */
 void serverTellEveryoneGoodbye();
 int update_players_from_server();
-void serverSendAlive(int); // player id
-void serverSendKillPacket(int,  // killer
-                          int,  // victim
-													int); // is_ack
+void serverSendAlive(int); /* player id */
+void serverSendKillPacket(int,  /* killer */
+                          int,  /* victim */
+													int); /* is_ack */
 void update_players_from_clients();
-void init_server(const char*); // netarg
-void connect_to_server(char*); // netarg
+void init_server(const char*); /* netarg */
+void connect_to_server(char*); /* netarg */
 
-//#ifdef __cplusplus
-//}
-//#endif
+/*#ifdef __cplusplus
+}
+#endif*/
 
 #endif /* __NET_H */
+

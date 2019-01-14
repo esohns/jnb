@@ -1,27 +1,15 @@
-GOBS = numbers.gob objects.gob rabbit.gob
-DATAFILES = bump.mod calib.dat death.smp fly.smp font.gob jump.mod \
-	jump.smp levelmap.txt level.pcx mask.pcx menu.pcx \
-	menumask.pcx $(GOBS) scores.mod splash.smp spring.smp
+all: assets
 
-all: jumpbump.dat
+gobs: ../gobpack
+	cd ../tools && make
 
-font.gob:
-	../gobpack font
+data: ../jnbpack
+	cd ../tools && make
 
-rabbit.gob:
-	../gobpack rabbit
-
-numbers.gob:
-	../gobpack numbers
-
-objects.gob:
-	../gobpack objects
-
-jumpbump.dat: $(DATAFILES) ../jnbpack
-	../jnbpack -o jumpbump.dat $(DATAFILES)
-
-../jnbpack:
-	cd ../modify && make
+assets: gobs data
+	cd assets && make
 
 clean:
-	rm -f jumpbump.dat $(GOBS)
+	rm -f jumpbump.dat
+	cd assets && make clean
+

@@ -4,11 +4,11 @@ CFLAGS = -Wall -O2 -ffast-math -funroll-loops -Dstricmp=strcasecmp \
 	-Dstrnicmp=strncasecmp -DUSE_SDL -DNDEBUG -I. $(SDL_CFLAGS) \
 	-DUSE_NET -DZLIB_SUPPORT -DBZLIB_SUPPORT
 LIBS = -lm $(SDL_LIBS) -lSDL_mixer -lSDL_net -lbz2 -lz
-SDL_TARGET = sdl.a
-MODIFY_TARGET = gobpack jnbpack jnbunpack
-OBJS = fireworks.o main.o menu.o filter.o
+SDL_TARGET = src/sdl.a
+BIN_TARGET = gobpack jnbpack jnbunpack
+MAIN_OBJS = src/fireworks.o src/main.o src/menu.o src/filter.o src/dat.o src/net.o
 TARGET = jumpnbump
-BINARIES = $(TARGET) jumpnbump.svgalib jumpnbump.fbcon $(MODIFY_TARGET) \
+BINARIES = $(TARGET) jumpnbump.svgalib jumpnbump.fbcon $(BIN_TARGET) \
 	jnbmenu.tcl
 PREFIX ?= /usr/local
 
@@ -16,31 +16,33 @@ PREFIX ?= /usr/local
 
 all: $(BINARIES)
 
-$(SDL_TARGET): globals.h
-	cd sdl && make
+$(SDL_TARGET): src/globals.h
+	cd src/sdl && make
 
-$(MODIFY_TARGET): globals.h
-	cd modify && make
+$(BIN_TARGET): src/globals.h
+	cd tools && make
 
-$(TARGET): $(OBJS) $(SDL_TARGET) data globals.h
-	$(CC) -o $(TARGET) $(OBJS) $(LIBS) $(SDL_TARGET)
+$(TARGET): $(MAIN_OBJS) $(SDL_TARGET) data
+	$(CC) -o $(TARGET) $(MAIN_OBJS) $(LIBS) $(SDL_TARGET)
 
-$(OBJS): globals.h
+$(MAIN_OBJS): src/globals.h
 
-globals.h: globals.pre
-	sed -e "s#%%PREFIX%%#$(PREFIX)#g" < globals.pre > globals.h
+globals.h:
+#globals.h: globals.pre
+#	sed -e "s#%%PREFIX%%#$(PREFIX)#g" < globals.pre > globals.h
 
 jnbmenu.tcl: jnbmenu.pre
 	sed -e "s#%%PREFIX%%#$(PREFIX)#g" < jnbmenu.pre > jnbmenu.tcl
 
-data: jnbpack
+data: gobpack jnbpack jnbunpack
 	cd data && make
 
 clean:
-	cd sdl && make clean
-	cd modify && make clean
+	cd src/sdl && make clean
+	cd tools && make clean
 	cd data && make clean
-	rm -f $(TARGET) *.o globals.h jnbmenu.tcl
+	rm -f $(TARGET) *.o jnbmenu.tcl
+#	rm -f $(TARGET) *.o globals.h jnbmenu.tcl
 
 install:
 	mkdir -p $(PREFIX)/games/

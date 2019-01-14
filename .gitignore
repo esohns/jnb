@@ -1,24 +1,15 @@
+*.gob
+data/jumpbump.dat
+src/sdl.a
+gobpack
+jnbpack
+jnbunpack
+
 Debug
-
 Release
-
 ipch
 
-/jumpnbump.sdf
-/jumpnbump.opensdf
-<<<<<<< HEAD
-
-/contrib/vs2010/jumpnbump.suo
-/contrib/vs2010/jumpnbump.opensdf
-
-/contrib/vs2010/jumpnbump.sdf
-
-/contrib/vs2010/jnb.sdf
-
-/contrib/vs2010/jnb.suo
-=======
->>>>>>> 3a58f2914ffe77e25e533bc08481ca536023c811
-
-/contrib/vs2010/jnb.opensdf
-
 build
+*.o
+
+jumpnbump

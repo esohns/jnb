@@ -536,7 +536,8 @@ dj_ready_mod(char mod_num)
 	}
 
 	current_music = Mix_LoadMUS(filename);
-	_unlink(filename);
+/*	_unlink(filename);*/
+	unlink(filename);
 	if (current_music == NULL) {
 		fprintf(stderr, "Couldn't load music: %s\n", Mix_GetError());
 		return 0;

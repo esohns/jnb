@@ -58,14 +58,15 @@ main(int argc, char** argv)
     int num_entries, i;
 
     if (argc < 2) {
-	printf("dumbass, specify filename to unpack\n");
-	exit(1);
+	    printf("dumbass, specify filename to unpack\n");
+	    exit(1);
     }
 
-    fd = open(argv[1], O_RDONLY | O_BINARY);
+/*    fd = open(argv[1], O_RDONLY | O_BINARY);*/
+    fd = open(argv[1], O_RDONLY);
     if (fd == -1) {
-	perror("open datafile");
-	exit(1);
+	    perror("open datafile");
+	    exit(1);
     }
     /* get number of entries */
     read(fd, &num_entries, 4);
@@ -76,34 +77,35 @@ main(int argc, char** argv)
     read(fd, datafile, num_entries * sizeof(struct DirEntry));
     printf("Directory Listing:\n");
     for (i = 0; i < num_entries; i++) {
-	char filename[14];
-	memset(filename, 0, sizeof(filename));
-	strncpy(filename, datafile[i].filename, 12);
-	printf("%02d:\t%s (%u bytes)\n", i, filename,
-		datafile[i].size);
+	    char filename[14];
+	    memset(filename, 0, sizeof(filename));
+	    strncpy(filename, datafile[i].filename, 12);
+	    printf("%02d:\t%s (%u bytes)\n", i, filename, datafile[i].size);
     }
 
     for (i = 0; i < num_entries; i++) {
-	int outfd;
-	char filename[14];
-	char *buf;
-	memset(filename, 0, sizeof(filename));
-	strncpy(filename, datafile[i].filename, 12);
-	printf("Extracting %s ", filename);
+	    int outfd;
+	    char filename[14];
+	    char *buf;
+	    memset(filename, 0, sizeof(filename));
+	    strncpy(filename, datafile[i].filename, 12);
+	    printf("Extracting %s ", filename);
 
-	outfd = open(filename, O_RDWR | O_CREAT | O_BINARY, 0644);
-	if (!outfd) {
-	    perror("cant open file");
-	    exit(1);
-	}
-	lseek(fd, datafile[i].offset, SEEK_SET);
-	buf = calloc(1, datafile[i].size + 16);
-	read(fd, buf, datafile[i].size);
-	write(outfd, buf, datafile[i].size);
-	close(outfd);
-	free(buf);
-	printf("OK\n");
+/*	outfd = open(filename, O_RDWR | O_CREAT | O_BINARY, 0644);*/
+	    outfd = open(filename, O_RDWR | O_CREAT, 0644);
+	    if (!outfd) {
+	      perror("cant open file");
+	      exit(1);
+    	}
+	    lseek(fd, datafile[i].offset, SEEK_SET);
+	    buf = calloc(1, datafile[i].size + 16);
+	    read(fd, buf, datafile[i].size);
+	    write(outfd, buf, datafile[i].size);
+	    close(outfd);
+	    free(buf);
+	    printf("OK\n");
     }
     close(fd);
     return 0;
 }
+

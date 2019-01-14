@@ -2,9 +2,9 @@
 #ifndef __INPUT_H
 #define __INPUT_H
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+/*#ifdef __cplusplus
+extern "C" {
+#endif*/
 
 #define MOVEMENT_LEFT  1
 #define MOVEMENT_RIGHT 2
@@ -62,15 +62,16 @@ extern struct mouse_t mouse;
 
 int hook_keyb_handler();
 void remove_keyb_handler();
-int key_pressed(const int);     // key
-int addkey(const unsigned int); // key
+int key_pressed(const int);     /* key */
+int addkey(const unsigned int); /* key */
 
 void update_player_actions();
 void init_inputs();
-int calib_joy(int);             // type
+int calib_joy(int);             /* type */
 
-//#ifdef __cplusplus
-//}
-//#endif
+/*#ifdef __cplusplus
+}
+#endif*/
 
 #endif /* __INPUT_H */
+

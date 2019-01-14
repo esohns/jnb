@@ -30,9 +30,9 @@
 #include <SDL.h>
 #endif /* USE_SDL */
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+/*#ifdef __cplusplus
+extern "C" {
+#endif*/
 
 #define JNB_MAX_PLAYERS 4
 
@@ -153,47 +153,47 @@ extern int ai[JNB_MAX_PLAYERS];
 
 /* main.c */
 void steer_players();
-void position_player(int); // player num
+void position_player(int); /* player num */
 void fireworks();
-void add_object(int,  // type
-                int,  // x
-                int,  // y
-                int,  // x_add
-                int,  // y_add
-                int,  // anim
-                int); // frame
+void add_object(int,  /* type */
+                int,  /* x */
+                int,  /* y */
+                int,  /* x_add */
+                int,  /* y_add */
+                int,  /* anim */
+                int); /* frame */
 void update_objects();
-int add_pob(int,            // page
-            int,            // x
-            int,            // y
-            int,            // image
-            struct gob_t*); // pob_data
-void draw_flies(int); // page
-void draw_pobs(int); // page
-void redraw_flies_background(int); // page
-void redraw_pob_backgrounds(int); // page
-int add_leftovers(int,            // page
-                  int,            // x
-                  int,            // y
-                  int,            // image
-                  struct gob_t*); // pob_data
-void draw_leftovers(int); // page
-int init_level(int,    // level
-               char*); // pal
+int add_pob(int,            /* page */
+            int,            /* x */
+            int,            /* y */
+            int,            /* image */
+            struct gob_t*); /* pob_data */
+void draw_flies(int); /* page */
+void draw_pobs(int); /* page */
+void redraw_flies_background(int); /* page */
+void redraw_pob_backgrounds(int); /* page */
+int add_leftovers(int,            /* page */
+                  int,            /* x */
+                  int,            /* y */
+                  int,            /* image */
+                  struct gob_t*); /* pob_data */
+void draw_leftovers(int); /* page */
+int init_level(int,    /* level */
+               char*); /* pal */
 void deinit_level();
-int init_program(int,    // argc
-                 char**, // argv
-                 char*); // pal
+int init_program(int,    /* argc */
+                 char**, /* argv */
+                 char*); /* pal */
 void deinit_program();
-unsigned short rnd(unsigned short); // max
+unsigned short rnd(unsigned short); /* max */
 int read_level();
 void write_calib_data();
 #ifdef USE_SDL
 Uint32 expire_ack_cb(Uint32 interval, void* parameter);
 #endif /* USE_SDL */
 
-//#ifdef __cplusplus
-//}
-//#endif
+/*#ifdef __cplusplus
+}
+#endif*/
 
 #endif /* __GLOBALS_H */
