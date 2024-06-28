@@ -2,9 +2,9 @@
 #ifndef __NET_H
 #define __NET_H
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#endif*/
+#endif
 
 #ifdef USE_SDL
 #include <SDL_net.h>
@@ -86,9 +86,9 @@ void update_players_from_clients();
 void init_server(const char*); /* netarg */
 void connect_to_server(char*); /* netarg */
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
-#endif*/
+#endif
 
 #endif /* __NET_H */
 

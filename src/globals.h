@@ -30,9 +30,9 @@
 #include <SDL.h>
 #endif /* USE_SDL */
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#endif*/
+#endif
 
 #define JNB_MAX_PLAYERS 4
 
@@ -192,8 +192,8 @@ void write_calib_data();
 Uint32 expire_ack_cb(Uint32 interval, void* parameter);
 #endif /* USE_SDL */
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
-#endif*/
+#endif
 
 #endif /* __GLOBALS_H */

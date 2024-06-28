@@ -26,14 +26,14 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
-//#ifdef __cplusplus
-//extern "C" {
-//#endif
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define JNB_VERSION "1.52"
 
-//#ifdef __cplusplus
-//}
-//#endif
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __CONFIG_H */

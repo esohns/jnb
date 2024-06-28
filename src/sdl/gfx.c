@@ -52,7 +52,7 @@ int dirty_block_shift    = 4;
 
 SDL_Surface* jnb_surface;
 
-int fullscreen           = 0;
+int fullscreen           = 1;
 int vinited              = 0;
 void* screen_buffer[2];
 int drawing_enable       = 0;

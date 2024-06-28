@@ -24,9 +24,9 @@
 #ifndef __SFX_H
 #define __SFX_H
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#endif*/
+#endif
 
 #define DJ_SD_TYPE_NOSOUND 0
 #define DJ_SD_TYPE_SBLASTER 1
@@ -169,9 +169,9 @@ char dj_get_mod_volume(void);
 char dj_load_mod(unsigned char* file_handle, char* filename, char mod_num);
 void dj_free_mod(char mod_num);
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
-#endif*/
+#endif
 
 #endif /* __SFX_H */
 

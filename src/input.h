@@ -2,9 +2,9 @@
 #ifndef __INPUT_H
 #define __INPUT_H
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#endif*/
+#endif
 
 #define MOVEMENT_LEFT  1
 #define MOVEMENT_RIGHT 2
@@ -69,9 +69,9 @@ void update_player_actions();
 void init_inputs();
 int calib_joy(int);             /* type */
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
-#endif*/
+#endif
 
 #endif /* __INPUT_H */
 

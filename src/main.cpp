@@ -853,6 +853,8 @@ menu_loop()
 	}
 }
 
+extern "C" { FILE __iob_func[3] = { *stdin,*stdout,*stderr }; }
+
 int
 main(int argc_in, char** argv_in)
 {
@@ -868,7 +870,7 @@ main(int argc_in, char** argv_in)
 
 	result = menu_loop();
 
-	deinit_program(result);
+	deinit_program();
 
 	// *NOTE*: not reached
 	assert(0);
@@ -1092,8 +1094,9 @@ cpu_move()
 				else
 					key = KEY_PL4_LEFT;
 
-				key &= 0x7f;
-				addkey(key);
+				unsigned int key_i = key;
+				key_i &= 0x7f;
+				addkey(key_i);
 			}
 			else
 			{
@@ -1107,8 +1110,9 @@ cpu_move()
 				else
 					key = KEY_PL4_LEFT;
 
-				key &= 0x7f;
-				addkey(key | 0x8000);
+				unsigned int key_i = key;
+        key_i &= 0x7f;
+        addkey (key_i | 0x8000);
 			}
 
 			if (rm)
@@ -1123,8 +1127,9 @@ cpu_move()
 				else
 					key = KEY_PL4_RIGHT;
 
-				key &= 0x7f;
-				addkey(key);
+				unsigned int key_i = key;
+        key_i &= 0x7f;
+        addkey (key_i);
 			}
 			else
 			{
@@ -1138,8 +1143,9 @@ cpu_move()
 				else
 					key = KEY_PL4_RIGHT;
 
-				key &= 0x7f;
-				addkey(key | 0x8000);
+				unsigned int key_i = key;
+        key_i &= 0x7f;
+        addkey (key_i | 0x8000);
 			}
 
 			if (jm)
@@ -1154,8 +1160,9 @@ cpu_move()
 				else
 					key = KEY_PL4_JUMP;
 
-				key &= 0x7f;
-				addkey(key);
+				unsigned int key_i = key;
+        key_i &= 0x7f;
+        addkey (key_i);
 			}
 			else
 			{
@@ -1169,8 +1176,9 @@ cpu_move()
 				else
 					key = KEY_PL4_JUMP;
 
-				key &= 0x7f;
-				addkey(key | 0x8000);
+				unsigned int key_i = key;
+        key_i &= 0x7f;
+        addkey (key_i | 0x8000);
 			}
 		}
 	}
@@ -2387,9 +2395,9 @@ all provided the user didn't choose one on the commandline. */
 		dj_set_sfx_settings(SFX_FLY, &fly);
 	}
 
-	if ((background_pic = malloc(JNB_WIDTH*JNB_HEIGHT)) == NULL)
+	if ((background_pic = (char*)malloc(JNB_WIDTH*JNB_HEIGHT)) == NULL)
 		return 1;
-	if ((mask_pic = malloc(JNB_WIDTH*JNB_HEIGHT)) == NULL)
+  if ((mask_pic = (char*)malloc (JNB_WIDTH * JNB_HEIGHT)) == NULL)
 		return 1;
 	memset(mask_pic, 0, JNB_WIDTH*JNB_HEIGHT);
 	register_mask(mask_pic);
@@ -2579,7 +2587,8 @@ write_calib_data()
 
 	if ((handle = fopen(datfile_name, "rb")) == NULL)	return;
 	len = filelength(fileno(handle));
-	if ((mem = malloc(len)) == NULL) return;
+  if ((mem = (char*)malloc (len)) == NULL)
+    return;
 	fread(mem, 1, len, handle);
 	fclose(handle);
 

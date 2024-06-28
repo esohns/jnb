@@ -1,0 +1,15 @@
+# jnbConfig.cmake.in
+#  JNB_INCLUDE_DIRS - include directories for FooBar
+#  JNB_LIBRARIES    - libraries to link against
+
+# Compute paths
+get_filename_component (JNB_CMAKE_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+set (JNB_INCLUDE_DIRS "@CONF_INCLUDE_DIRS@")
+
+# library dependencies (contains definitions for IMPORTED targets)
+if (NOT TARGET jnb AND NOT JNB_BINARY_DIR)
+ include ("${JNB_CMAKE_DIR}/jnbTargets.cmake")
+endif ()
+
+# These are IMPORTED targets created by jnbCommonTargets.cmake
+#set (JNB_LIBRARIES jnb)

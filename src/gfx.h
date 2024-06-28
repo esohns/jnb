@@ -2,9 +2,9 @@
 #ifndef __GFX_H
 #define __GFX_H
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#endif*/
+#endif
 
 extern int screen_width;
 extern int screen_height;
@@ -84,9 +84,9 @@ void register_mask(void* pixels);
 void fs_toggle();
 #endif /* USE_SDL */
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
-#endif*/
+#endif
 
 #endif /* __GFX_H */
 

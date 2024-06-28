@@ -2,15 +2,15 @@
 #ifndef __INTERRPT_H
 #define __INTERRPT_H
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 extern "C" {
-#endif*/
+#endif
 
 int intr_sysupdate();
 
-/*#ifdef __cplusplus
+#ifdef __cplusplus
 }
-#endif*/
+#endif
 
 #endif /* __INTERRPT_H */
 
